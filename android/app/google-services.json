@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "874828933771",
+    "project_id": "psoriasis-app",
+    "storage_bucket": "psoriasis-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874828933771:android:9e556d12fcda171b46828e",
+        "android_client_info": {
+          "package_name": "com.example.psoriasis_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "874828933771-92r8o1gqo9sp1mc4m73r5e58uo3afq4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrM1s4z7yRqGKlEEnqfdfSwzVzROSTigM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "874828933771-92r8o1gqo9sp1mc4m73r5e58uo3afq4p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
