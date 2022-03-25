@@ -107,7 +107,7 @@ class Body extends StatelessWidget {
                     // FirebaseFirestore f =FirebaseFirestore.instance;
                     // CollectionReference c = f.collection('users');
                     // c.add({email : password});
-                    return NavBar();
+                    return NavBar(whichPage: 0, mini: 0);
                   },
                 ),
               );

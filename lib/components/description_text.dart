@@ -16,7 +16,7 @@ class DescriptionText extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       alignment: Alignment.centerLeft,
-        width: size.width * 0.8,
+        width: size.width * 0.9,
         constraints: BoxConstraints(maxWidth: 1000),
         child: RichText(
           text: TextSpan(
@@ -29,7 +29,6 @@ class DescriptionText extends StatelessWidget {
                   fontSize: titleSize,
                 )
               ),
-              
               TextSpan(
                 text: text, 
                 style: TextStyle(

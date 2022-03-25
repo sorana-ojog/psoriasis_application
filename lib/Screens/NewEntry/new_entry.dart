@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Blank/blank.dart';
 import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
+import 'package:psoriasis_application/Screens/QuestionnaireP1/wop.dart';
 import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
+import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/description_text.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/constants.dart';
@@ -16,12 +18,6 @@ class NewEntry extends StatefulWidget {
 
 class _AppState extends State<NewEntry> {
   bool? _value = false;
-
-
-  void logout() async {
-    await FirebaseAuth.instance.signOut();
-    // Navigator.pushNamed(context, Welcome);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +44,7 @@ class _AppState extends State<NewEntry> {
             // mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: size.height * 0.03),
               DescriptionText(
                 titleText: 'Description', 
                 text: 'The Self-Assessment Simplified Psoriasis Index (saSPI-s) is a tool which has been developed to enable patients with psoriasis to make regular assessments of disease severity and its impact on well-being. It also incorporates a summary of past behaviour and treatment. ',
@@ -86,11 +83,11 @@ class _AppState extends State<NewEntry> {
               SizedBox(height: size.height * 0.04),
               Container(
                 alignment: Alignment.centerLeft,
-                width: size.width * 0.9,
+                width: size.width * 0.95,
                 constraints: BoxConstraints(maxWidth: 1000),
                 child: CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
-                    title: const Text('I understand what I am about to complete and I agree the processing of my data by the practice I am enrolled at.'),
+                    title: const Text('I understand what I am about to complete and I agree to the processing of my data by the practice I am enrolled at.'),
                     autofocus: false,
                     activeColor: kPrimaryColor,
                     checkColor: Colors.white,
@@ -103,28 +100,30 @@ class _AppState extends State<NewEntry> {
                     },
                   ),
               ),
-              // const Text('If you understand what you are about to complete and agree to processing of your data by the practice you are enrolled at, press button below.'),
+              SizedBox(height: size.height * 0.02),
               RoundedButton(
                 text: 'Start Questionnaire', 
                 press: (){
-                  if(_value == true){
+                  if(_value == false){
                     const snackBar = SnackBar(
                     duration: const Duration(seconds: 5),
                     content: Text('You did not agree to the conditions!'),
                     );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;
                   }else{
                     Navigator.push(
                       context, 
                       MaterialPageRoute(
                       builder: (context){
-                        return QuestionnaireP1();
+                        return NavBar(whichPage: 1, mini: 1);
                         },
                       ),
                     );
                   }
                 }
-              )
+              ),
+              SizedBox(height: size.height * 0.03),
             ],
           ),
         ),

@@ -160,7 +160,6 @@ class Body extends StatelessWidget {
                       "email": email,
                       "code": code
                       });
-                    
                     return BlankScreen();
                   },
                 ),

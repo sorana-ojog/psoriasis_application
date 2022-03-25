@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class Background extends StatelessWidget {
   final Widget child;
   const Background({
@@ -12,25 +11,29 @@ class Background extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      width:double.infinity,
+      width: double.infinity,
       height: size.height,
       child: Stack(
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter,
         children: <Widget>[
-          Positioned(
-            top: 0,
-            left: 0,
+          Container(
+            width: size.width,
+            height: size.height,
+            alignment: Alignment.topLeft,
             child: Image.asset(
               "assets/images/main_top.png",
               width: size.width * 0.3,
+              alignment: Alignment.topLeft,
             ),
           ),
-          Positioned(
-            bottom: 0,
-            right: 0,
+          Container(
+            width: size.width,
+            height: size.height,
+            alignment: Alignment.bottomRight,
             child: Image.asset(
               "assets/images/login_bottom.png",
-              width: size.width * 0.4,
+              width: size.width * 0.3,
+              alignment: Alignment.bottomRight,
             ),
           ),
           child,
