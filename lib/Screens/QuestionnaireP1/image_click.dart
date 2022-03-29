@@ -139,7 +139,8 @@ Widget _buildPopupDialog(BuildContext context, String key) {
       FlatButton(
         onPressed: () async{
           final prefs = await SharedPreferences.getInstance();
-          print(prefs.getDouble(key));
+          print(prefs.getDouble(actualZone));
+          print(zoneIntensity[actualZone]);
           Navigator.of(context).pop();
         },
         textColor: kPrimaryColor,
@@ -447,23 +448,6 @@ class _ImageClickState extends State<ImageClick> {
                           primary: kPrimaryColor,
                         ),
                         onPressed: () async{
-                          //calculeaza aici scorul
-                          double score = 0;
-                          if(this.widget.whichImage == "back"){
-                            print("back");
-                            final prefs = await SharedPreferences.getInstance();
-                            for(var z in zoneIntensity.keys){
-                              final double? partScore = await prefs.getDouble(z);
-                              print(partScore);
-                              if(partScore != null){
-                                score += partScore;
-                                //rem
-                              }
-                            }
-                            print("this is the score");
-                            print(score);
-                            await prefs.setDouble('part1a', score);
-                          }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -471,8 +455,18 @@ class _ImageClickState extends State<ImageClick> {
                               if(this.widget.whichImage == "front"){
                                 return NavBar(whichPage: 2, mini: 1);
                               }else{
-                                //remove everything in shared prefs.
-                                ////////////////////
+                                zoneIntensity = {
+                          'scalp1': Intensity.low,
+                          'face2': Intensity.low,
+                          'arms3': Intensity.low,
+                          'hands4': Intensity.low,
+                          'chest5': Intensity.low,
+                          'back6': Intensity.low,
+                          'genitals7': Intensity.low,
+                          'thighs8': Intensity.low,
+                          'legs9': Intensity.low,
+                          'feets10': Intensity.low,
+                          };
                                 return NavBar(whichPage: 3, mini: 1);
                               }
                             },

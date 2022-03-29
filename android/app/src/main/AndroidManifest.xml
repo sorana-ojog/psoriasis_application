@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.psoriasis_application">
    <application
-        android:label="psoriasis_application"
+        android:label="Psoriasis Control"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

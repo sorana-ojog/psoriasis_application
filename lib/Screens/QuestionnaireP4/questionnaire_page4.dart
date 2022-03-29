@@ -20,6 +20,7 @@ import 'package:psoriasis_application/constants.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:psoriasis_application/Screens/QuestionnaireP4/dialog.dart';
+import 'package:intl/intl.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 void main() async {
@@ -39,7 +40,7 @@ class _AppState extends State< QuestionnaireP4> {
     bool? _value3 = false;
     bool? _value4 = false;
     bool? _value5 = false;
-    String tablets_no= "";
+    String tablets_no= "0";
     bool checkboxValueCity = false;
     List<String> allTablets = ['Acitretin', 'Ciclosporin', 'Efalizumab', 'Methotrexate', 'Infliximab', 'Dimethylfumarate', 'Etanercept', 'Apremilast', 'Secukinumab', 'Ustekinumab', 'Other'];
     List<String> selectedTablets = [];
@@ -276,7 +277,7 @@ class _AppState extends State< QuestionnaireP4> {
                       constraints: BoxConstraints(maxWidth: 900),
                       child: 
                     Text(
-                      'Number of your psoriasis tablets and/or injections',
+                      'The number of your psoriasis tablets and/or injections',
                       style: TextStyle(
                       fontSize: 16,
                       ),
@@ -417,8 +418,10 @@ class _AppState extends State< QuestionnaireP4> {
                           final uid = user!.uid;
                           Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
                           DateTime myDateTime = myTimeStamp.toDate();
-                          // print("current phone data is: $currentPhoneDate");
-                          print("current phone data is: $myDateTime");
+                          final DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm');
+                          final String formatted = formatter.format(myDateTime);
+                          print("current phone data is: $currentPhoneDate");
+                          print("current phone data is: $formatted");
                           final prefs = await SharedPreferences.getInstance();
                           final int? part1b = await prefs.getInt('psoriasis_today');
                           final double? _part2 = await prefs.getDouble('affected_today'); 
@@ -445,8 +448,13 @@ class _AppState extends State< QuestionnaireP4> {
                             }
                             print(zoneIntensity[z]);
                           }
-                          final int? part1a = _part1AScore.toInt();
-                          final int? part1 = part1a! * part1b!;
+                          double part1 = 0;
+                          if(part1b != null){
+                            part1 = _part1AScore * part1b;
+                          }
+
+                          
+                          // final int? part1 = 0;
                           final int? part2 = _part2?.toInt();
                           // ///////// 
                           int part3Res = 0;
@@ -455,12 +463,13 @@ class _AppState extends State< QuestionnaireP4> {
                               part3Res += 1;
                             }
                           }
+                          ////////null error
                           if(int.parse(tablets_no) <= 5){
                             part3Res += int.parse(tablets_no);
                           }else{
                             part3Res += 5;
                           }
-                          await prefs.setInt('part1Score', part1!);
+                          await prefs.setDouble('part1Score', part1);
                           await prefs.setInt('history', part3Res);
                           Navigator.push(
                             context,
@@ -469,18 +478,19 @@ class _AppState extends State< QuestionnaireP4> {
                                 FirebaseFirestore f = FirebaseFirestore.instance;
                                 CollectionReference c = f.collection('form');
                                 c.add({
-                                  "part1b" : part1,
+                                  "part1" : part1,
+                                  "part1b" : part1b,
                                   "part2": part2,
                                   "part3": part3Res,
                                   "p3_10years": _value1,
-                                  "p3_20years:": _value2,
+                                  "p3_20years": _value2,
                                   "p3_bright_red": _value3,
                                   "p3_rheumatologist": _value4,
                                   "p3_ultraviolet": _value5,
                                   "p3_number_of_tablets": tablets_no,
                                   "p3_which_tablets": selectedTablets,
                                   "user_ID": uid,
-                                  "date_time": myDateTime,
+                                  "date_time": formatted,
                                   'scalp1': zoneIntensity['scalp1'],
                                   'face2': zoneIntensity['face2'],
                                   'arms3': zoneIntensity['arms3'],
@@ -492,7 +502,7 @@ class _AppState extends State< QuestionnaireP4> {
                                   'legs9': zoneIntensity['legs9'],
                                   'feets10': zoneIntensity['feets10'],
                                 });
-                                
+                                //remove stuff
                                 return Results();
                               },
                             ),
@@ -501,7 +511,8 @@ class _AppState extends State< QuestionnaireP4> {
                           child: Text('Send Form'),
                         ),
                       ),
-                    )
+                    ),
+                    SizedBox(height: size.height * 0.02),
                   ],
                 ),
               ),

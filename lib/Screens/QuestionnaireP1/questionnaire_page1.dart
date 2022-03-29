@@ -36,7 +36,6 @@ class _AppState extends State< QuestionnaireP1> {
     super.initState();
     preference();
   }
-  String assetName = 'assets/images/front_body.svg';
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

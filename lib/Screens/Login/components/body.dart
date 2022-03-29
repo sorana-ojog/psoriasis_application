@@ -7,6 +7,7 @@ import 'package:psoriasis_application/Screens/Login/components/background.dart';
 import 'package:psoriasis_application/Screens/Login/login_screen.dart';
 import 'package:psoriasis_application/Screens/Signup/signup_screen.dart';
 import 'package:psoriasis_application/components/already_have_an_account.dart';
+import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/components/rounded_input_field.dart';
@@ -62,40 +63,55 @@ class Body extends StatelessWidget {
             text: "SIGN IN", 
             press: ()async {
               try {
-                      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      );
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'user-not-found') {
-                        const snackBar = SnackBar(
-                          duration: const Duration(seconds:5),
-                          content: Text('No user found for this email.'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        print('No user found for this email.');
-                        return;
-                      } else if (e.code == 'wrong-password') {
-                        const snackBar = SnackBar(
-                          duration: const Duration(seconds: 5),
-                          content: Text('Wrong Password!'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        print('Wrong password provided for that user.');
-                        return;
-                      } else {
-                        const snackBar = SnackBar(
-                          duration: const Duration(seconds: 5),
-                          content: Text('This is not a valid email!'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        print('This is not a valid email.');
-                        return;
-                      }
-                    } catch (e) {
-                      print(e);
-                    }
-              
+                UserCredential userCredential = await auth.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'user-not-found') {
+                  const snackBar = SnackBar(
+                    duration: const Duration(seconds:5),
+                    content: Text('No user found for this email.'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  print('No user found for this email.');
+                  return;
+                } else if (e.code == 'wrong-password') {
+                  const snackBar = SnackBar(
+                    duration: const Duration(seconds: 5),
+                    content: Text('Wrong Password!'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  print('Wrong password provided for that user.');
+                  return;
+                } else {
+                  const snackBar = SnackBar(
+                    duration: const Duration(seconds: 5),
+                    content: Text('This is not a valid email!'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  print('This is not a valid email.');
+                  return;
+                }
+              } catch (e) {
+                print(e);
+              }
+              final User? user = await auth.currentUser;
+              final uid = user!.uid;
+              String badge ="";
+              print (uid);
+              CollectionReference ref = await FirebaseFirestore.instance.collection('users');
+              await ref
+                  .where("user_ID", isEqualTo: uid)
+                  .get()
+                  .then((value) {
+                value.docs.forEach((result) {
+                  badge = result["signup_code"];
+                  print(badge);
+                });
+              });
+              final regex = RegExp(r'[0-9]{9}');
+
               const snackBar = SnackBar(
                 content: Text('Successfully signed in!'),
               );
@@ -107,7 +123,7 @@ class Body extends StatelessWidget {
                     // FirebaseFirestore f =FirebaseFirestore.instance;
                     // CollectionReference c = f.collection('users');
                     // c.add({email : password});
-                    return NavBar(whichPage: 0, mini: 0);
+                    return regex.hasMatch(badge) ? NavBarDoctor(whichPage: 0, mini: 0) : NavBar(whichPage: 0, mini: 0);
                   },
                 ),
               );

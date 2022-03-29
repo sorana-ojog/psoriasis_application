@@ -27,7 +27,6 @@ class PatientsData {
   final int part1;
   final int part2;
   final int part3;
-
   PatientsData({
     required this.date,
     required this.p3_10years, 

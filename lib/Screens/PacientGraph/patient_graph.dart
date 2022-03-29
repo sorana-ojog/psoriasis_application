@@ -1,67 +1,109 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/components/bottom_nav2.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
+import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:draw_graph/draw_graph.dart';
-import 'package:draw_graph/models/feature.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'dart:async';
-import 'dart:math' as math;
 
-
-class Graphs extends StatefulWidget {
-  final List<String> dates;
-  final List<double> part1;
-  final List<double> part2;
-  final List<double> part3;
-  const Graphs({
-    Key? key, 
-    required this.dates, 
-    required this.part1, 
-    required this.part2, 
-    required this.part3
-    }) : super(key: key);
-
+class PacientGraph extends StatefulWidget {
+  final uid;
+  const PacientGraph({Key? key, required this.uid}) : super(key: key);
   @override
   _AppState createState() => _AppState();
 }
-int _selectedIndex = 2;
-class _AppState extends State<Graphs> {
+int _selectedIndex = 1;
+String patient_name = "";
+String title = "";
+List<String> formsDates = [];
+List<double> part1Results = [];
+List<double> part2Results = [];
+List<double> part3Results = [];
+
+class _AppState extends State<PacientGraph> {
+  int count = 0;
   late List<Score> chartData;
   late List<Score> chart2Data;
   late List<Score> chart3Data;
   late ChartSeriesController _chartSeriesController;
   late ChartSeriesController _chartSeriesController2;
   late ChartSeriesController _chartSeriesController3;
-
-  @override
-  void initState() {
+   @override
+  // void initState() {
+  //   chartData = getChartData();
+  //   chart2Data = getChart2Data();
+  //   chart3Data = getChart3Data();
+  //   super.initState();
+  // }
+  Future<List<String>> data() async{
+    print(widget.uid);
+    String date = "";
+    CollectionReference ref1 = await FirebaseFirestore.instance.collection('users');
+    await ref1
+        .where("user_ID", isEqualTo: widget.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((result) {
+        title = result["title"];
+        patient_name = result["first_name"];
+        patient_name = patient_name + " " + result["last_name"];
+      });
+    });
+    CollectionReference ref2 = await FirebaseFirestore.instance.collection('form');
+    await ref2
+        .orderBy("date_time", descending: false)
+        // .limit(7)
+        .where("user_ID", isEqualTo: widget.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((result) {
+        var date = result["date_time"];
+        var array = date.split("/");
+        var time = array[2].split(" ");
+        date = array[0] + "/"+ array[1]+ " "+ time[1];
+        var part1 = result["part1"];
+        var part2 = result["part2"];
+        var part3 = result["part3"];
+        formsDates.add(date);
+        part1Results.add(part1);
+        part2Results.add(part2+ 0.0);
+        part3Results.add(part3 +0.0);
+        print(date);
+        print(formsDates);
+        print(part1Results);
+        print(part2Results);
+        print(part3Results);
+      });
+    });
     chartData = getChartData();
     chart2Data = getChart2Data();
     chart3Data = getChart3Data();
-    // Timer.periodic(const Duration(seconds: 1), updateDataSource);
-    super.initState();
+    return formsDates;
   }
-
+ 
   @override
   Widget build(BuildContext context) {
+    final Future<List<String>> patient_data = data();
+    // final String mine = patient_data as String;
+    print("yes here");
+    print (patient_data);
     Size size = MediaQuery.of(context).size;
-    double width = size.width;
-    double height = size.height;
     return Scaffold(
       appBar: AppBar(
         // actions: <Widget>[
         // ],
-        title: Text('Graphs'),
+        title: Text('Pacient Forms'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
-      // bottomNavigationBar: NavBar2(),
       bottomNavigationBar: _showBottomNav(),
-      body:Container(
+      body: FutureBuilder<List<String>>(
+        future: patient_data, // a previously-obtained Future<List<String>> or null
+        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+      
+       return Container(
         alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
@@ -72,7 +114,7 @@ class _AppState extends State<Graphs> {
                 width: size.width * 0.85,
                 constraints: BoxConstraints(maxWidth: 800),
                 child: Text(
-                  'Below, you can see the progress and changes from your completed questionnaires in 3 different graphs, each representing one of the parts that are scored individually. The X axis shows the date of completion, while the Y axis shows the results you received for that specific part.', 
+                  'Below, you can see the progress and changes from $title $patient_name\'s completed questionnaires in 3 different graphs, each representing one of the parts that are scored individually. The X axis shows the date of completion, while the Y axis shows the results that they received for that specific part.', 
                   style: TextStyle(
                   fontSize: 18,
                   ),
@@ -166,28 +208,30 @@ class _AppState extends State<Graphs> {
             ],
           ),
         ),
-      ),
+      );}),
     );
   }
 
+
+
   List<Score> getChartData() {
     return <Score>[
-      for(var i=0; i<widget.part1.length; i++)Score(widget.dates[i], widget.part1[i])
+      for(var i=0; i<part1Results.length; i++)Score(formsDates[i], part1Results[i])
     ];
   }
 
   List<Score> getChart2Data() {
     return <Score>[
-      for(var i=0; i<widget.part2.length; i++)Score(widget.dates[i], widget.part2[i])
+      for(var i=0; i<part2Results.length; i++)Score(formsDates[i], part2Results[i])
     ];
   }
 
   List<Score> getChart3Data() {
     return <Score>[
-      for(var i=0; i<widget.part3.length; i++)Score(widget.dates[i], widget.part3[i])
+      for(var i=0; i<part3Results.length; i++)Score(formsDates[i], part3Results[i])
     ];
   }
-   Widget _showBottomNav()
+ Widget _showBottomNav()
   {
     return BottomNavigationBar(
         items: [
@@ -197,13 +241,8 @@ class _AppState extends State<Graphs> {
             backgroundColor: kPrimaryLightColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.border_color),
-            label: 'New Entry',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.assignment),
-            label: 'Past Entries',
+            label: 'Your Patients',
             backgroundColor: kPrimaryLightColor,
           ),
           BottomNavigationBarItem(
@@ -228,7 +267,6 @@ class _AppState extends State<Graphs> {
     });
   }
 }
-
 class Score {
   Score(this.time, this.value);
   final String time;

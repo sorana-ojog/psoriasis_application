@@ -21,14 +21,17 @@ class  Results extends StatefulWidget {
 }
 
 class _AppState extends State<Results> {
-  int? _part1 = 10;
-  double? _part2 = 10;
-  int? _part3 = 10;
+  double? _part1 = 0;
+  double? _part2 = 0;
+  int? _part3 = 0;
   Future<void> preference() async {
   final prefs = await SharedPreferences.getInstance();
   // ignore: await_only_futures
-  final int? part1 = await prefs.getInt('part1Score');
-  final double? part2 = await prefs.getDouble('affected_today');
+  final double? part1 = await prefs.getDouble('part1Score');
+  double? part2 = await prefs.getDouble('affected_today');
+  if(part2 == null){
+    part2 = 0;
+  }
   final int? part3 = await prefs.getInt('history');
   setState(() => _part1 = part1);
   setState(() => _part2 = part2);
@@ -146,7 +149,53 @@ class _AppState extends State<Results> {
                           primary: kPrimaryLightColor,
                           onPrimary: kPrimaryColor,
                         ),
-                        onPressed: () {
+                        onPressed: () async{
+                           
+                          final prefs = await SharedPreferences.getInstance();
+                          final a = await prefs.remove('scalp1');
+                          final b= await prefs.remove('face2');
+//                           final User? user = auth.currentUser;
+//                           final uid = user!.uid;
+//                           print (uid);
+//                           CollectionReference ref = FirebaseFirestore.instance.collection('form');
+//   //                         ref.get().then((querySnapshot) {
+//   //   querySnapshot.docs.forEach((result) {
+//   //     print(result.data());
+//   //   });
+//   // });
+// ref
+//     .where("user_ID", isEqualTo: uid)
+//     .get()
+//     .then((value) {
+//   value.docs.forEach((result) {
+//     var rez = result["date_time"];
+//     // var date = rez!["date_time"];
+//       print(rez);
+//   });
+// });
+
+
+
+    // Stream<QuerySnapshot<Object?>> eventsQuery = await ref
+    //     .where("user_ID", isEqualTo: uid)
+    //     .snapshots();
+    // print(ref);
+    // var document = await FirebaseFirestore.instance.collection('form');
+    // print("here");
+    // print(document);
+  // document.get() => then(function(document) {
+  //   print(document("name"));
+  //   });
+                          await prefs.remove('arms3');
+                          await prefs.remove('hands4');
+                          await prefs.remove('chest5');
+                          await prefs.remove('back6');
+                          await prefs.remove('genitals7');
+                          await prefs.remove('thighs8');
+                          await prefs.remove('legs9');
+                          await prefs.remove('feets10');
+                          await prefs.remove('psoriasis_today');
+                          await prefs.remove('affected_today');
                       Navigator.push(
                         context,
                         MaterialPageRoute(

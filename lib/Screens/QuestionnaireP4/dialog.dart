@@ -63,25 +63,25 @@ class _MyDialogState extends State<MyDialog> {
               child: ListView.builder(
                   itemCount: widget.tablets.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final cityName = widget.tablets[index];
+                    final tabletName = widget.tablets[index];
                     return Container(
                       child: CheckboxListTile(
-                          title: Text(cityName),
-                          value: _tempSelectedTablets.contains(cityName),
+                          title: Text(tabletName),
+                          value: _tempSelectedTablets.contains(tabletName),
                           activeColor: kPrimaryColor,
                           checkColor: Colors.white,
                           onChanged: (bool? value) {
                             if (value!) {
-                              if (!_tempSelectedTablets.contains(cityName)) {
+                              if (!_tempSelectedTablets.contains(tabletName)) {
                                 setState(() {
-                                  _tempSelectedTablets.add(cityName);
+                                  _tempSelectedTablets.add(tabletName);
                                 });
                               }
                             } else {
-                              if (_tempSelectedTablets.contains(cityName)) {
+                              if (_tempSelectedTablets.contains(tabletName)) {
                                 setState(() {
                                   _tempSelectedTablets.removeWhere(
-                                      (String city) => city == cityName);
+                                      (String tablet) => tablet == tabletName);
                                 });
                               }
                             }
@@ -91,23 +91,6 @@ class _MyDialogState extends State<MyDialog> {
                     );
                   }),
             ),
-            // Container(
-            //   alignment: Alignment.center,
-            //   margin: EdgeInsets.symmetric(vertical: 10),
-            //   width: size.width * 0.5,
-            //   height: size.height * 0.05,
-            //   constraints: BoxConstraints(maxWidth: 500),
-            //   child: TextField(
-            //     onChanged: (value) => widget.other = value,
-            //     decoration: InputDecoration(
-            //       counterText: "",
-            //       border: OutlineInputBorder(),
-            //       focusedBorder: OutlineInputBorder(
-            //           borderSide: BorderSide(color: kPrimaryColor, width: 2.0),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(vertical: 10),

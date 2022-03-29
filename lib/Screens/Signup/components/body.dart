@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Blank/blank.dart';
+import 'package:psoriasis_application/Screens/SeePatients/see_patients.dart';
 import 'package:psoriasis_application/Screens/Signup/components/background.dart';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Login/login_screen.dart';
 import 'package:psoriasis_application/Screens/Signup/signup_screen.dart';
 import 'package:psoriasis_application/components/already_have_an_account.dart';
+import 'package:psoriasis_application/components/bottom_nav_doc.dart';
+import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/components/rounded_input_field.dart';
 import 'package:psoriasis_application/components/rounded_password_field.dart';
@@ -17,18 +20,6 @@ import 'package:psoriasis_application/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-// class Body extends StatelessWidget{
-//   @override
-//   Widget build(BuildContext context){
-//     Size size = MediaQuery.of(context).size;
-//     return Background(
-//       child: Column(
-//         children: <Widget>[],
-//       ),
-//     );
-//   }
-// }
 FirebaseAuth auth = FirebaseAuth.instance;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -141,11 +132,20 @@ class Body extends StatelessWidget {
                       print(e);
                     }
               
+              final regex = RegExp(r'[0-9]{9}');
+              //checks if the code used in login is a 9 digits one
+              var doctor_code= "";
+              if(regex.hasMatch(code)){
+                var r = Random();
+                const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+                doctor_code = List.generate(10, (index) => _chars[r.nextInt(_chars.length)]).join();
+              }
               const snackBar = SnackBar(
                 content: Text('Successfully registered!'),
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              
+              final User? user = await auth.currentUser;
+              final uid = user!.uid;
               Navigator.push(
                 context, 
                 MaterialPageRoute(
@@ -156,11 +156,20 @@ class Body extends StatelessWidget {
                       "title" : title,
                       "first_name": first_name,
                       "last_name": last_name,
-                      "date_of_birth:": date_of_birth,
+                      "date_of_birth": date_of_birth,
                       "email": email,
-                      "code": code
+                      "signup_code": code,
+                      "user_ID": uid
                       });
-                    return BlankScreen();
+                    if(doctor_code != ""){
+                      CollectionReference p = f.collection('doctors');
+                      p.add({
+                      "doctor_code": doctor_code,
+                      "user_ID": uid
+                      });
+                    }
+                    
+                    return doctor_code=="" ? NavBar(whichPage: 0, mini: 0) : NavBarDoctor(whichPage: 0, mini: 0);
                   },
                 ),
               );
