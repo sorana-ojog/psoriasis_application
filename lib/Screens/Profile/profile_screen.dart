@@ -27,7 +27,7 @@ class _AppState extends State<Profile> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.close),
+                icon: Icon(Icons.logout),
                 onPressed: () {
                   // _auth.signOut();
                   // Navigator.pop(context);
@@ -45,6 +45,7 @@ class _AppState extends State<Profile> {
                 }),
           ],
           title: Text('Profile'),
+          centerTitle: true,
           backgroundColor: kPrimaryColor,
         ),
         body:

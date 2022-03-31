@@ -10,7 +10,10 @@ import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/description_text.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/constants.dart';
+import 'package:intl/intl.dart';
 
+
+FirebaseAuth auth = FirebaseAuth.instance;
 class NewEntry extends StatefulWidget {
   @override
    _AppState createState() => _AppState();
@@ -18,7 +21,6 @@ class NewEntry extends StatefulWidget {
 
 class _AppState extends State<NewEntry> {
   bool? _value = false;
-
   @override
   Widget build(BuildContext context) {
     
@@ -80,7 +82,13 @@ class _AppState extends State<NewEntry> {
                 text: 'The historical course and interventions score is assessed by 10 questions, four relating to disease course and six to previous interventions received.', 
                 titleSize: 20
               ),
-              SizedBox(height: size.height * 0.04),
+              SizedBox(height: size.height * 0.03),
+              DescriptionText(
+                titleText: 'ATTENTION! You can only submit one form per day!', 
+                text: '', 
+                titleSize: 20
+              ),
+              SizedBox(height: size.height * 0.01),
               Container(
                 alignment: Alignment.centerLeft,
                 width: size.width * 0.95,
@@ -103,11 +111,42 @@ class _AppState extends State<NewEntry> {
               SizedBox(height: size.height * 0.02),
               RoundedButton(
                 text: 'Start Questionnaire', 
-                press: (){
+                press: ()async{
+                  final User? user = await auth.currentUser;
+                  final uid = user!.uid;
+                  List<String> datas = [];
+                  print (uid);
+                  CollectionReference ref2 = await FirebaseFirestore.instance.collection('form');
+                  await ref2
+                      .orderBy("date_time", descending: true)
+                      .limit(1)
+                      .where("user_ID", isEqualTo: uid)
+                      .get()
+                      .then((value) {
+                    value.docs.forEach((result) {
+                      var date = result["date_time"];
+                      var array = date.split(" ");
+                      date = array[0];
+                      datas.add(date);
+                      print(datas);
+                    });
+                  });
+                  DateTime currentPhoneDate = DateTime.now();
+                  Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+                  DateTime myDateTime = myTimeStamp.toDate();
+                  final DateFormat formatter = DateFormat('dd/MM/yyyy');
+                  final String formatted = formatter.format(myDateTime);
                   if(_value == false){
                     const snackBar = SnackBar(
                     duration: const Duration(seconds: 5),
                     content: Text('You did not agree to the conditions!'),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    return;
+                  }else if(datas[0] == formatted){
+                    const snackBar = SnackBar(
+                    duration: const Duration(seconds: 5),
+                    content: Text('You already submitted the form for today!'),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;

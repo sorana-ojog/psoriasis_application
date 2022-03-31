@@ -41,8 +41,9 @@ var genitals7;
 var thighs8;
 var legs9;
 var feets10;
+var which_tablets;
 class _AppState extends State<PatientForm> {
-  int count = 0;
+  int finish = 0;
   //  @override
   // void initState() {
   //   // Timer.periodic(const Duration(seconds: 1), updateDataSource);
@@ -92,6 +93,13 @@ class _AppState extends State<PatientForm> {
         feets10 = result["feets10"];
       });
     });
+    if(p3_which_tablets.toString() == "[]"){
+      which_tablets = 0;
+    }
+    else{
+      which_tablets = p3_which_tablets;
+    }
+    finish = 1;
     return patientData;
   }
  
@@ -110,29 +118,32 @@ class _AppState extends State<PatientForm> {
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
-      bottomNavigationBar: _showBottomNav(),
       body: FutureBuilder<List<String>>(
         future: patient_data, // a previously-obtained Future<List<String>> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-      
-       return Container(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child:Column(
-          children: <Widget>[
+      List<Widget> children;
+          if (snapshot.hasData && snapshot.data != [] && finish != 0) {
+            children = <Widget>[
               SizedBox(height: size.height * 0.04),
               Container(
-                alignment: Alignment.center,
-                width: size.width * 0.85,
-                constraints: BoxConstraints(maxWidth: 1000),
-                child: Text(
-                  'This is the form $title $patient_name completed at $date_time.',
-                  style: TextStyle(
-                  fontSize: 17,
-                  ),
-                ),
+              alignment: Alignment.center,
+              width: size.width * 0.85,
+              constraints: BoxConstraints(maxWidth: 1000),
+              child: RichText(
+                text:TextSpan(
+                  text: "",
+                  style: TextStyle( fontSize: 17),
+                  children: <TextSpan>[
+                    TextSpan(text: "This is the form ", style: TextStyle( color: Colors.black)),
+                    TextSpan(text: "$title $patient_name", style: TextStyle(fontWeight: FontWeight.bold, color: kPrimaryColor)),
+                    TextSpan(text: " completed on ", style: TextStyle( color: Colors.black)),
+                    TextSpan(text: "$date_time", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                    TextSpan(text: ".", style: TextStyle( color: Colors.black)),
+                  ],
+                )
               ),
-              SizedBox(height: size.height * 0.02),
+            ),
+              SizedBox(height: size.height * 0.03),
               Container(
                 alignment: Alignment.center,
                 width: size.width * 0.85,
@@ -140,6 +151,7 @@ class _AppState extends State<PatientForm> {
                 child: Text(
                   'Part 1',
                   style: TextStyle(
+                  fontWeight: FontWeight.bold,
                   fontSize: 20,
                   ),
                 ),
@@ -155,61 +167,61 @@ class _AppState extends State<PatientForm> {
                     width: 2),  
                   children: [  
                     TableRow( children: [  
-                      Column(children:[Text('Questionnaire Question', style: TextStyle(fontSize: 20.0))]),  
+                      Column(children:[Text(' Questionnaire Question', style: TextStyle(fontSize: 20.0))]),  
                       Column(children:[Text('Completed ', style: TextStyle(fontSize: 20.0))]),
                     ]), 
                     TableRow( children: [  
-                      Column(children:[Text('Results', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Results', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(part1.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]),
                     TableRow( children: [  
-                      Column(children:[Text('Overall state of my psoriasis', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Overall state of my psoriasis', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(part1b.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]),    
                     TableRow( children: [  
-                      Column(children:[Text('Scalp and hairline' , style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Scalp and hairline' , style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(scalp1.toString(), style: TextStyle(fontSize: 17.0))]),   
                     ]),  
                     TableRow( children: [  
-                      Column(children:[Text('Face, neck and ears', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Face, neck and ears', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(face2.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]),  
                     TableRow( children: [  
-                      Column(children:[Text('Right arm and armpit', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Right arm and armpit', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(arms3.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]),  
                     TableRow( children: [  
-                      Column(children:[Text('Left hand, fingers and fingernails', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Left hand, fingers and fingernails', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(hands4.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]), 
                     TableRow( children: [  
-                      Column(children:[Text('Chest and abdomen', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Chest and abdomen', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(chest5.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]), 
                     TableRow( children: [  
-                      Column(children:[Text('Back', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Back', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(back6.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]), 
                     TableRow( children: [  
-                      Column(children:[Text('Genital area', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Genital area', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(genitals7.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]), 
                     TableRow( children: [  
-                      Column(children:[Text('Thighs', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Thighs', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(thighs8.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]), 
                     TableRow( children: [  
-                      Column(children:[Text('Knees and lower legs', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Knees and lower legs', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(legs9.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]), 
                     TableRow( children: [  
-                      Column(children:[Text('Feet, toes and toenails', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Feet, toes and toenails', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(feets10.toString(), style: TextStyle(fontSize: 17.0))]),  
                     ]),
                   ],  
                 ),  
               ),
-              SizedBox(height: size.height * 0.02),
+              SizedBox(height: size.height * 0.03),
               Container(
                 alignment: Alignment.center,
                 width: size.width * 0.85,
@@ -217,6 +229,7 @@ class _AppState extends State<PatientForm> {
                 child: Text(
                   'Part 2',
                   style: TextStyle(
+                    fontWeight: FontWeight.bold,
                   fontSize: 20,
                     ),
                   ),
@@ -232,21 +245,21 @@ class _AppState extends State<PatientForm> {
                     width: 2),  
                   children: [  
                     TableRow( children: [  
-                      Column(children:[Text('Questionnaire Question', style: TextStyle(fontSize: 20.0))]),  
+                      Column(children:[Text(' Questionnaire Question', style: TextStyle(fontSize: 20.0))]),  
                       Column(children:[Text('Completed ', style: TextStyle(fontSize: 20.0))]),
                     ]),  
                     TableRow( children: [  
-                      Column(children:[Text('Results', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Results', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(part2.toString(), style: TextStyle(fontSize: 17.0))]),   
                     ]),
                     TableRow( children: [  
-                      Column(children:[Text('How much my psoriasis was affecting me', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' How much my psoriasis was affecting me', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(part2.toString(), style: TextStyle(fontSize: 17.0))]),   
                     ]),
                   ],  
                 ),  
               ),    
-              SizedBox(height: size.height * 0.02),
+              SizedBox(height: size.height * 0.03),
               Container(
                 alignment: Alignment.center,
                 width: size.width * 0.85,
@@ -254,7 +267,8 @@ class _AppState extends State<PatientForm> {
                 child: Text(
                   'Part 3',
                   style: TextStyle(
-                  fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -269,11 +283,11 @@ class _AppState extends State<PatientForm> {
                     width: 2),  
                   children: [  
                     TableRow( children: [  
-                      Column(children:[Text('Questionnaire Question', style: TextStyle(fontSize: 20.0))]),  
+                      Column(children:[Text(' Questionnaire Question', style: TextStyle(fontSize: 20.0))]),  
                       Column(children:[Text('Completed ', style: TextStyle(fontSize: 20.0))]),
                     ]),  
                     TableRow( children: [  
-                      Column(children:[Text('Results', style: TextStyle(fontSize: 17.0))]),  
+                      Column(children:[Text(' Results', style: TextStyle(fontSize: 17.0))]),  
                       Column(children:[Text(part3.toString(), style: TextStyle(fontSize: 17.0))]),   
                     ]),
                     TableRow( children: [  
@@ -302,52 +316,47 @@ class _AppState extends State<PatientForm> {
                     ]),
                     TableRow( children: [  
                       Column(children:[Text(' My psoriasis tablets and/or injections', style: TextStyle(fontSize: 17.0))]),  
-                      Column(children:[Text(p3_which_tablets.toString(), style: TextStyle(fontSize: 17.0))]),   
+                      Column(children:[Text(which_tablets.toString(), style: TextStyle(fontSize: 17.0))]),   
                     ]),
                     
                   ],  
                 ),  
               ), 
               SizedBox(height: size.height * 0.02),
-            ],
+            ];
+          } else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Loading Data...'),
+              )
+            ];
+          }
+       return Container(
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child:Column(
+          children: children,
           ),
         ),
       );}),
     );
-  }
- Widget _showBottomNav()
-  {
-    return BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Your Patients',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-            backgroundColor: kPrimaryLightColor,
-          ),
-        ],
-      backgroundColor: kPrimaryLightColor,
-      currentIndex: _selectedIndex,
-      selectedItemColor: kPrimaryColor,
-      unselectedItemColor: Colors.white,
-      onTap: _onTap,
-    );
-  }
-
-  void _onTap(int index)
-  {
-    _selectedIndex = index;
-    setState(() {
-
-    });
   }
 }

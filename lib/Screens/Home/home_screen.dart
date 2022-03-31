@@ -26,7 +26,6 @@ class _AppState extends State< HomeScreen> {
         .then((value) {
       value.docs.forEach((result) {
         rez = result["title"];
-        rez = rez.toLowerCase();
         rez = rez + " " + result["first_name"];
         rez = rez + " " + result["last_name"];
         signup_code = result["signup_code"];
@@ -49,7 +48,6 @@ class _AppState extends State< HomeScreen> {
         .then((value) {
       value.docs.forEach((result) {
         rez = result["title"];
-        rez = rez.toLowerCase();
         rez = rez + " " + result["first_name"];
         rez = rez + " " + result["last_name"];
         datas.add(rez);
@@ -85,15 +83,10 @@ class _AppState extends State< HomeScreen> {
       body: FutureBuilder<List<String>>(
         future: doctor_data, // a previously-obtained Future<List<String>> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-      
-       return Container(
-        width:double.infinity,
-        height: size.height,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: size.height * 0.1),
+      List<Widget> children;
+      if (snapshot.hasData && snapshot.data != [] && snapshot.data!.length == 3) {
+          children = <Widget>[
+            SizedBox(height: size.height * 0.05),
               Text(
                 "Hi, ${snapshot.data![0]}!",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
@@ -119,19 +112,17 @@ class _AppState extends State< HomeScreen> {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              Text(
-                "You are registered with $title ${snapshot.data![1]}.",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+              Container(
+                alignment: Alignment.center,
+                width: size.width * 0.85,
+                constraints: BoxConstraints(maxWidth: 900),
+                child: 
+                  Text(
+                    "You are registered with $title ${snapshot.data![1]}.",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+                  ),
               ),
-              // RichText(
-              //   text:TextSpan(
-              //     text: "You are registered with $title ${snapshot.data![1]}",
-              //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
-              //     children: <TextSpan>[
-              //       TextSpan(text: "${snapshot.data![1]}", style: TextStyle(color: kPrimaryColor)),
-              //     ],
-              //   )
-              // ),
+              
               SizedBox(height: size.height * 0.02),
               Container(
                 alignment: Alignment.center,
@@ -173,20 +164,41 @@ class _AppState extends State< HomeScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: size.height * 0.03),
-              // Container(
-              //   constraints: BoxConstraints(maxWidth: 900),
-              //   child:Divider(
-              //     color: kPrimaryLightColor2,
-              //     thickness: 3
-              //   ),
-              // ),
-              // Image.asset(
-              //     "assets/images/doctor.png", 
-              //     height: size.height * 0.4,
-              // ),
-              SizedBox(height: size.height * 0.03),
-            ],
+              SizedBox(height: size.height * 0.06),
+          ];
+        }else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Loading Data...'),
+              )
+            ];
+          }
+       return 
+       Container(
+        width:double.infinity,
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children
           ),
       )
       );}),

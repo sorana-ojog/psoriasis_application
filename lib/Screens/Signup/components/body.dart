@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/SeePatients/see_patients.dart';
 import 'package:psoriasis_application/Screens/Signup/components/background.dart';
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Login/login_screen.dart';
-import 'package:psoriasis_application/Screens/Signup/signup_screen.dart';
 import 'package:psoriasis_application/components/already_have_an_account.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/components/rounded_input_field.dart';
-import 'package:psoriasis_application/components/rounded_password_field.dart';
 import 'package:psoriasis_application/components/text_field_container.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:psoriasis_application/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,10 +29,16 @@ String first_name = "";
 String last_name = ""; 
 String date_of_birth = "";
 String code= "";
-class Body extends StatelessWidget {
-  const Body({
-    Key? key,
-  }) : super(key: key);
+class Body extends StatefulWidget {
+  const Body({Key? key}) : super(key: key);
+
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  bool visible = false;
+  bool visible2 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +48,12 @@ class Body extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: size.height * 0.03),
           Text(
             "Sign Up",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
           ),
-          SizedBox(height: size.height * 0.03),
-          // Image.asset(
-          //     "assets/images/doctor.png", 
-          //     height: size.height * 0.08,
-          // ),
+          SizedBox(height: size.height * 0.01),
           RoundedInputField(
             hintText: "Title",
             icon: Icons.title,
@@ -81,22 +78,66 @@ class Body extends StatelessWidget {
             hintText: "Email",
             onChanged: (value) => email = value,
           ),
-          RoundedPasswordField(
-            hintText: "Password",
-            onChanged: (value) => password = value,
-          ),
-          RoundedPasswordField(
-            hintText: "Password Confirmation",
-            onChanged: (value) => password_confirmation = value,
-          ),
+          TextFieldContainer(
+              child: TextField(
+                obscureText: !visible,
+                onChanged: (value) => password = value,
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  icon: Icon(
+                    Icons.lock,
+                    color: kPrimaryColor,
+                  ),
+                  suffixIcon: IconButton(
+                      icon: visible ? Icon(Icons.visibility, color:  kPrimaryColor ):
+                                       Icon(Icons.visibility_off,color:  Colors.grey),
+                      onPressed: () {
+                        setState(() {
+                          visible = !visible;
+                        });
+                      }),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            TextFieldContainer(
+              child: TextField(
+                obscureText: !visible2,
+                onChanged: (value) => password_confirmation = value,
+                decoration: InputDecoration(
+                  hintText: "Password Confirmation",
+                  icon: Icon(
+                    Icons.lock,
+                    color: kPrimaryColor,
+                  ),
+                  suffixIcon: IconButton(
+                      icon: visible2 ? Icon(Icons.visibility, color:  kPrimaryColor ):
+                                       Icon(Icons.visibility_off,color:  Colors.grey),
+                      onPressed: () {
+                        setState(() {
+                          visible2 = !visible2;
+                        });
+                      }),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
           RoundedInputField(
-            hintText: "Code Given By GP",
+            hintText: "GP's Code/ NHS Badge",
             icon: Icons.confirmation_num,
             onChanged: (value) => code = value,
           ),
           RoundedButton(
             text: "SIGN UP", 
             press: ()async {
+              if (password_confirmation != password) {
+                  const snackBar = SnackBar(
+                    duration: const Duration(seconds: 5),
+                    content: Text('The passwords do not match!'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  return;
+                }
               try {
                       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
                         email: email,
@@ -175,7 +216,7 @@ class Body extends StatelessWidget {
               );
             },
           ),
-          SizedBox(height: size.height * 0.03),
+          SizedBox(height: size.height * 0.01),
           AlreadyHaveAnAccountCheck(
             login: false,
             press: (){
@@ -189,6 +230,7 @@ class Body extends StatelessWidget {
               );
             },
           ),
+          SizedBox(height: size.height * 0.05),
         ],
       ),
       ),

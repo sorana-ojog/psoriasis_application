@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Home/components/body.dart';
 import 'package:psoriasis_application/Screens/SpecificPacient/specific_patient.dart';
+import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,20 +27,6 @@ class _AppState extends State< SeePatients> {
     String patient_ID = "";
     int no_patients = 0;
     print (uid);
-    // CollectionReference ref = await FirebaseFirestore.instance.collection('users');
-    // await ref
-    //     .where("user_ID", isEqualTo: uid)
-    //     .get()
-    //     .then((value) {
-    //   value.docs.forEach((result) {
-    //     rez = result["title"];
-    //     rez = rez.toLowerCase();
-    //     rez = rez + " " + result["first_name"];
-    //     rez = rez + " " + result["last_name"];
-    //     patients.add(rez);
-        
-    //   });
-    // });
     CollectionReference ref1 = await FirebaseFirestore.instance.collection('doctors');
     await ref1
         .where("user_ID", isEqualTo: uid)
@@ -67,7 +54,8 @@ class _AppState extends State< SeePatients> {
       });
     });
     List<String> newList = patients + birth_dates;
-    count = (newList.length/2) as int;
+    double length = newList.length/2;
+    count = length.floor();
     return newList;
   }
   @override
@@ -88,13 +76,9 @@ class _AppState extends State< SeePatients> {
       body: FutureBuilder<List<String>>(
         future: patient_data, // a previously-obtained Future<List<String>> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-      
-       return Container(
-        width:double.infinity,
-        height: size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+      List<Widget> children;
+      if (snapshot.hasData && snapshot.data != [] && count != 0) {
+            children = <Widget>[
               SizedBox(height: size.height * 0.05),
             Container(
               alignment: Alignment.center,
@@ -125,7 +109,7 @@ class _AppState extends State< SeePatients> {
                   context, 
                   MaterialPageRoute(
                     builder: (context){
-                      return SpecificPacient(uid: user_IDs[index]);
+                      return NavBarDoctor(uid: user_IDs[index], whichPage: 1, mini: 1,);
                     },
                   ),
                 );
@@ -135,8 +119,39 @@ class _AppState extends State< SeePatients> {
                 }
               ),
             ),
-
-            ],
+            ];
+          }else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Loading Data...'),
+              )
+            ];
+          }
+       return 
+       Container(
+        width:double.infinity,
+        height: size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children
           ),
       );}),
     );

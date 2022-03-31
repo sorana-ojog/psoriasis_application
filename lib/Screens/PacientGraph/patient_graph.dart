@@ -17,16 +17,20 @@ class PacientGraph extends StatefulWidget {
 int _selectedIndex = 1;
 String patient_name = "";
 String title = "";
+List<String> rformsDates = [];
+List<double> rpart1Results = [];
+List<double> rpart2Results = [];
+List<double> rpart3Results = [];
 List<String> formsDates = [];
 List<double> part1Results = [];
 List<double> part2Results = [];
 List<double> part3Results = [];
 
 class _AppState extends State<PacientGraph> {
-  int count = 0;
-  late List<Score> chartData;
-  late List<Score> chart2Data;
-  late List<Score> chart3Data;
+  int finish = 0;
+  late List<Score> chartData = [];
+  late List<Score> chart2Data =[];
+  late List<Score> chart3Data =[];
   late ChartSeriesController _chartSeriesController;
   late ChartSeriesController _chartSeriesController2;
   late ChartSeriesController _chartSeriesController3;
@@ -39,7 +43,6 @@ class _AppState extends State<PacientGraph> {
   // }
   Future<List<String>> data() async{
     print(widget.uid);
-    String date = "";
     CollectionReference ref1 = await FirebaseFirestore.instance.collection('users');
     await ref1
         .where("user_ID", isEqualTo: widget.uid)
@@ -53,33 +56,38 @@ class _AppState extends State<PacientGraph> {
     });
     CollectionReference ref2 = await FirebaseFirestore.instance.collection('form');
     await ref2
-        .orderBy("date_time", descending: false)
-        // .limit(7)
+        .orderBy("date_time", descending: true)
+        .limit(8)
         .where("user_ID", isEqualTo: widget.uid)
         .get()
         .then((value) {
       value.docs.forEach((result) {
         var date = result["date_time"];
         var array = date.split("/");
-        var time = array[2].split(" ");
-        date = array[0] + "/"+ array[1]+ " "+ time[1];
+        // var time = array[2].split(" ");
+        date = array[0] + "/"+ array[1];
         var part1 = result["part1"];
         var part2 = result["part2"];
         var part3 = result["part3"];
-        formsDates.add(date);
-        part1Results.add(part1);
-        part2Results.add(part2+ 0.0);
-        part3Results.add(part3 +0.0);
+        rformsDates.add(date);
+        rpart1Results.add(part1 + 0.0);
+        rpart2Results.add(part2+ 0.0);
+        rpart3Results.add(part3 +0.0);
         print(date);
-        print(formsDates);
-        print(part1Results);
-        print(part2Results);
-        print(part3Results);
+        print(rformsDates);
+        print(rpart1Results);
+        print(rpart2Results);
+        print(rpart3Results);
       });
     });
+    formsDates = rformsDates.reversed.toList();
+    part1Results = rpart1Results.reversed.toList();
+    part2Results = rpart2Results.reversed.toList();
+    part3Results = rpart3Results.reversed.toList();
     chartData = getChartData();
     chart2Data = getChart2Data();
     chart3Data = getChart3Data();
+    finish = 1;
     return formsDates;
   }
  
@@ -98,27 +106,29 @@ class _AppState extends State<PacientGraph> {
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
-      bottomNavigationBar: _showBottomNav(),
       body: FutureBuilder<List<String>>(
         future: patient_data, // a previously-obtained Future<List<String>> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-      
-       return Container(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
+      List<Widget> children;
+          if (snapshot.hasData && snapshot.data != [] && finish != 0) {
+            children = <Widget>[
               SizedBox(height: size.height * 0.04),
               Container(
                 alignment: Alignment.center,
                 width: size.width * 0.85,
                 constraints: BoxConstraints(maxWidth: 800),
-                child: Text(
-                  'Below, you can see the progress and changes from $title $patient_name\'s completed questionnaires in 3 different graphs, each representing one of the parts that are scored individually. The X axis shows the date of completion, while the Y axis shows the results that they received for that specific part.', 
-                  style: TextStyle(
-                  fontSize: 18,
-                  ),
-                ),
+                child: 
+                  RichText(
+                text:TextSpan(
+                  text: "",
+                  style: TextStyle( fontSize: 18),
+                  children: <TextSpan>[
+                    TextSpan(text: "Below, you can see the progress and changes from ", style: TextStyle(color: Colors.black)),
+                    TextSpan(text: "$title $patient_name", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                    TextSpan(text: "\'s completed questionnaires in 3 different graphs, each representing one of the parts in the saSPI form, scored individually. The horizontal axis shows the date of completion, while the vertical axis shows the results that they received for that specific part.", style: TextStyle(color: Colors.black)),
+                  ],
+                )
+              ),
               ),
               SizedBox(height: size.height * 0.05),
               Text(
@@ -205,7 +215,37 @@ class _AppState extends State<PacientGraph> {
                 ),
               ),
               SizedBox(height: size.height * 0.03),
-            ],
+            ];
+          }else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Loading Data...'),
+              )
+            ];
+          }
+       return Container(
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Column(
+            children: children
           ),
         ),
       );}),
@@ -230,41 +270,6 @@ class _AppState extends State<PacientGraph> {
     return <Score>[
       for(var i=0; i<part3Results.length; i++)Score(formsDates[i], part3Results[i])
     ];
-  }
- Widget _showBottomNav()
-  {
-    return BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Your Patients',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-            backgroundColor: kPrimaryLightColor,
-          ),
-        ],
-      backgroundColor: kPrimaryLightColor,
-      currentIndex: _selectedIndex,
-      selectedItemColor: kPrimaryColor,
-      unselectedItemColor: Colors.white,
-      onTap: _onTap,
-    );
-  }
-
-  void _onTap(int index)
-  {
-    _selectedIndex = index;
-    setState(() {
-
-    });
   }
 }
 class Score {

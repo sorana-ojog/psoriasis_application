@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Home/components/body.dart';
 import 'package:psoriasis_application/Screens/PacientGraph/patient_graph.dart';
 import 'package:psoriasis_application/Screens/PatientForm/patient_form.dart';
+import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
@@ -19,7 +20,7 @@ int _selectedIndex = 1;
 String patient_name = "";
 String title = "";
 class _AppState extends State<SpecificPacient> {
-  int count = 0;
+  int finish = 0;
 
   Future<List<String>> data() async{
     print(widget.uid);
@@ -50,6 +51,7 @@ class _AppState extends State<SpecificPacient> {
         print(date);
       });
     });
+    finish = 1;
     return formsDates;
   }
   @override
@@ -67,22 +69,12 @@ class _AppState extends State<SpecificPacient> {
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
-      bottomNavigationBar: _showBottomNav(),
       body: FutureBuilder<List<String>>(
         future: patient_data, // a previously-obtained Future<List<String>> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-      
-       return Container(
-        width:double.infinity,
-        height: size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: size.height * 0.05),
-              Text(
-                "Data from $title $patient_name",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
-              ),
+       List<Widget> children;
+          if (snapshot.hasData && snapshot.data != [] && finish != 0) {
+            children = <Widget>[
               SizedBox(height: size.height * 0.05),
               Container(
               alignment: Alignment.center,
@@ -90,11 +82,28 @@ class _AppState extends State<SpecificPacient> {
               constraints: BoxConstraints(maxWidth: 1000),
               child: RichText(
                 text:TextSpan(
-                  text: "If you go to CHARTS you will see 3 line graphs showing the results for the past forms completed by ",
+                  text: "",
+                  style: TextStyle( fontSize: 23, fontWeight: FontWeight.bold),
+                  children: <TextSpan>[
+                    TextSpan(text: "Data from ", style: TextStyle( color: Colors.black)),
+                    TextSpan(text: "$title $patient_name", style: TextStyle( color: kPrimaryColor))
+                  ],
+                )
+              ),
+            ),
+              SizedBox(height: size.height * 0.05),
+              Container(
+              alignment: Alignment.center,
+              width: size.width * 0.85,
+              constraints: BoxConstraints(maxWidth: 1000),
+              child: RichText(
+                text:TextSpan(
+                  text: "",
                   style: TextStyle( fontSize: 17),
                   children: <TextSpan>[
-                    TextSpan(text: "$title $patient_name", style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: '.')
+                    TextSpan(text: "If you go to CHARTS you will see 3 line graphs showing the results for the past forms completed by ", style: TextStyle( color: Colors.black)),
+                    TextSpan(text: "$title $patient_name", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                    TextSpan(text: '.',style: TextStyle( color: Colors.black))
                   ],
                 )
               ),
@@ -107,22 +116,27 @@ class _AppState extends State<SpecificPacient> {
                   context, 
                   MaterialPageRoute(
                     builder: (context){
-                      return PacientGraph(uid: widget.uid);
+                      return NavBarDoctor(uid: widget.uid, whichPage: 2, mini: 1,);
                     },
                   ),
                 );
               }
             ),
-            SizedBox(height: size.height * 0.05),
+            SizedBox(height: size.height * 0.03),
             Container(
               alignment: Alignment.center,
               width: size.width * 0.85,
               constraints: BoxConstraints(maxWidth: 1000),
-              child: Text(
-                'Below, you can see all the completed forms sent by $title $patient_name, from the most recent one to the least recent one. If you press on any of them, you will be redirected to their answers for the questionnaire.',
-                style: TextStyle(
-                fontSize: 17,
-                ),
+              child: RichText(
+                text:TextSpan(
+                  text: "",
+                  style: TextStyle( fontSize: 17),
+                  children: <TextSpan>[
+                    TextSpan(text: "Below, you can see all the completed forms sent by ", style: TextStyle( color: Colors.black)),
+                    TextSpan(text: "$title $patient_name", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                    TextSpan(text: ', from the most recent one to the least recent one. If you press on any of them, you will be redirected to their answers for the questionnaire.', style: TextStyle( color: Colors.black))
+                  ],
+                )
               ),
             ),
             SizedBox(height: size.height * 0.03),
@@ -142,7 +156,7 @@ class _AppState extends State<SpecificPacient> {
                             context, 
                             MaterialPageRoute(
                               builder: (context){
-                                return PatientForm(uid: widget.uid, date: date);
+                                return NavBarDoctor(uid: widget.uid, whichPage: 3, mini: 1, date: date);
                               },
                             ),
                           );
@@ -152,46 +166,41 @@ class _AppState extends State<SpecificPacient> {
                 }
               ),
             ),
-
-            ],
+            SizedBox(height: size.height * 0.02),
+            ];
+          }else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Loading Data...'),
+              )
+            ];
+          }
+       return Container(
+        width:double.infinity,
+        height: size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children
           ),
       );}),
     );
-  }
-
-   Widget _showBottomNav()
-  {
-    return BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Your Pacients',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-            backgroundColor: kPrimaryLightColor,
-          ),
-        ],
-      backgroundColor: kPrimaryLightColor,
-      currentIndex: _selectedIndex,
-      selectedItemColor: kPrimaryColor,
-      unselectedItemColor: Colors.white,
-      onTap: _onTap,
-    );
-  }
-
-  void _onTap(int index)
-  {
-    _selectedIndex = index;
-    setState(() {
-
-    });
   }
 }

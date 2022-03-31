@@ -78,8 +78,7 @@ class _AppState extends State<PastEntries> {
                 value.docs.forEach((result) {
                   var date = result["date_time"];
                   var array = date.split("/");
-                  var time = array[2].split(" ");
-                  date = array[0] + "/"+ array[1]+ " "+ time[1];
+                  date = array[0] + "/"+ array[1];
                   var part1 = result["part1"];
                   var part2 = result["part2"];
                   var part3 = result["part3"];
