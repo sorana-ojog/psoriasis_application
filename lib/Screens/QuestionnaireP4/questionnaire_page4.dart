@@ -418,7 +418,7 @@ class _AppState extends State< QuestionnaireP4> {
                           final uid = user!.uid;
                           Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
                           DateTime myDateTime = myTimeStamp.toDate();
-                          final DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm');
+                          final DateFormat formatter = DateFormat('yyyy/MM/dd HH:mm');
                           final String formatted = formatter.format(myDateTime);
                           print("current phone data is: $currentPhoneDate");
                           print("current phone data is: $formatted");

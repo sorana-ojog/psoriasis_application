@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Home/components/body.dart';
 import 'package:psoriasis_application/Screens/SpecificPacient/specific_patient.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
+import 'package:psoriasis_application/components/rounded_button.dart';
+import 'package:psoriasis_application/components/rounded_input_field.dart';
 import 'package:psoriasis_application/components/square_button.dart';
+import 'package:psoriasis_application/components/text_field_container.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,6 +63,7 @@ class _AppState extends State< SeePatients> {
   }
   @override
   Widget build(BuildContext context) {
+    String input = "";
     final Future<List<String>> patient_data = data();
     // final String mine = patient_data as String;
     print("yes here");
@@ -79,6 +83,26 @@ class _AppState extends State< SeePatients> {
       List<Widget> children;
       if (snapshot.hasData && snapshot.data != [] && count != 0) {
             children = <Widget>[
+              SizedBox(height: size.height * 0.05),
+              TextFieldContainer(
+              child: TextField(
+                onChanged: (value) => input = value,
+                decoration: InputDecoration(
+                  hintText: "Search for patients by name",
+                  suffixIcon: IconButton(
+                      icon: Icon(Icons.search, color:  kPrimaryColor ),
+                      onPressed: () async{
+                        for(var i in snapshot.data!){
+                          if (i.contains(input)){
+
+                          }
+                        }
+                        snapshot.data!= [];
+                      }),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
               SizedBox(height: size.height * 0.05),
             Container(
               alignment: Alignment.center,

@@ -21,7 +21,8 @@ String patient_name = "";
 String title = "";
 class _AppState extends State<SpecificPacient> {
   int finish = 0;
-
+  String date1 = "";
+  List<String> dates = [];
   Future<List<String>> data() async{
     print(widget.uid);
     List<String> formsDates = [];
@@ -44,7 +45,11 @@ class _AppState extends State<SpecificPacient> {
         .get()
         .then((value) {
       value.docs.forEach((result) {
-        date = result["date_time"];
+        date1 = result["date_time"];
+        dates.add(date1);
+        var splitDate = date1.split(" ");
+        var splitDate2 = splitDate[0].split("/");
+        date = splitDate2[2]+ "/" + splitDate2[1] +"/"+ splitDate2[0];
         // var splitDate = date.split(" ");
         // date = splitDate[0];
         formsDates.add(date);
@@ -156,7 +161,7 @@ class _AppState extends State<SpecificPacient> {
                             context, 
                             MaterialPageRoute(
                               builder: (context){
-                                return NavBarDoctor(uid: widget.uid, whichPage: 3, mini: 1, date: date);
+                                return NavBarDoctor(uid: widget.uid, whichPage: 3, mini: 1, date: dates[index]);
                               },
                             ),
                           );

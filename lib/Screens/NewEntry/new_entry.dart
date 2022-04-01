@@ -21,6 +21,7 @@ class NewEntry extends StatefulWidget {
 
 class _AppState extends State<NewEntry> {
   bool? _value = false;
+   DateTime currentPhoneDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
     
@@ -122,28 +123,65 @@ class _AppState extends State<NewEntry> {
                 press: ()async{
                   final User? user = await auth.currentUser;
                   final uid = user!.uid;
+                  // Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+                  // DateTime myDateTime = myTimeStamp.toDate();
+                  // final DateFormat formatter = DateFormat('dd/MM/yyyy');
+                  // final String formatted = formatter.format(myDateTime);
                   List<String> datas = [];
+                  var date;
                   print (uid);
-                  CollectionReference ref2 = await FirebaseFirestore.instance.collection('form');
-                  await ref2
-                      .orderBy("date_time", descending: true)
-                      .limit(1)
+                  int no_forms = 0;
+                  CollectionReference ref3 = await FirebaseFirestore.instance.collection('form');
+                  await ref3
                       .where("user_ID", isEqualTo: uid)
+                      .limit(1)
+                      .orderBy("date_time", descending: true)
                       .get()
                       .then((value) {
                     value.docs.forEach((result) {
-                      var date = result["date_time"];
-                      var array = date.split(" ");
-                      date = array[0];
-                      datas.add(date);
-                      print(datas);
+                      date = result["date_time"];
+                      no_forms += 1;
                     });
                   });
-                  DateTime currentPhoneDate = DateTime.now();
+                  print(no_forms);
+                  if (no_forms == 0){
+                    date = "none";
+                  }else{
+                    var date1 = date.split(" ");
+                    date = date1[0];
+                  }
+                  print(date);
+                  // CollectionReference ref2 = await FirebaseFirestore.instance.collection('form');
+                  // await ref2
+                  //     .orderBy("date_time", descending: true)
+                  //     .where("user_ID", isEqualTo: uid)
+                  //     .get()
+                  //     .then((value) {
+                  //   value.docs.forEach((result) {
+                  //     print("mama");
+                  //     var date = result["date_time"];
+                  //     var array;
+                  //     array = date.split(" ");
+                  //     date = array[0];
+                  //     print(date);
+                      
+                  //     // if(date != null){
+                        
+                  //     // }else{
+                  //     //   date = "none";
+                  //     // }
+                  //     datas.add(date);
+                  //     print(datas);
+                  //   });
+                  // });
+                    
+                  // }
+                 
                   Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
                   DateTime myDateTime = myTimeStamp.toDate();
-                  final DateFormat formatter = DateFormat('dd/MM/yyyy');
+                  final DateFormat formatter = DateFormat('yyyy/MM/dd');
                   final String formatted = formatter.format(myDateTime);
+                  print(formatted);
                   if(_value == false){
                     const snackBar = SnackBar(
                     duration: const Duration(seconds: 5),
@@ -151,7 +189,7 @@ class _AppState extends State<NewEntry> {
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     return;
-                  }else if(datas[0] == formatted){
+                  }else if(date == formatted){
                     const snackBar = SnackBar(
                     duration: const Duration(seconds: 5),
                     content: Text('You already submitted the form for today!'),

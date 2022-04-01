@@ -21,6 +21,8 @@ class CompletedForms extends StatefulWidget {
 var uid;
 class _AppState extends State<CompletedForms> {
   int finish = 0;
+  String date1 = "";
+  List<String> dates = [];
 
   Future<List<String>> data() async{
     final User? user = await auth.currentUser;
@@ -34,9 +36,11 @@ class _AppState extends State<CompletedForms> {
         .get()
         .then((value) {
       value.docs.forEach((result) {
-        date = result["date_time"];
-        // var splitDate = date.split(" ");
-        // date = splitDate[0];
+        date1 = result["date_time"];
+        dates.add(date1);
+        var splitDate = date1.split(" ");
+        var splitDate2 = splitDate[0].split("/");
+        date = splitDate2[2]+ "/" + splitDate2[1] +"/"+ splitDate2[0];
         formsDates.add(date);
         print(date);
       });
@@ -94,7 +98,8 @@ class _AppState extends State<CompletedForms> {
                             context, 
                             MaterialPageRoute(
                               builder: (context){
-                                return NavBar(whichPage: 0, mini: 2, whichPage2: 3, date: date);
+
+                                return NavBar(whichPage: 0, mini: 2, whichPage2: 3, date: dates[index]);
                                 // NavBarDoctor(uid: uid, whichPage: 3, mini: 1, date: date);
                               },
                             ),

@@ -51,10 +51,14 @@ class _AppState extends State<Graphs> {
         .get()
         .then((value) {
       value.docs.forEach((result) {
-        var date = result["date_time"];
-        var array = date.split("/");
+        var date1 = result["date_time"];
+        var splitDate = date1.split(" ");
+        var splitDate2 = splitDate[0].split("/");
+        var date = splitDate2[2]+ "/" + splitDate2[1];
+        // var date = result["date_time"];
+        // var array = date.split("/");
         // var time = array[2].split(" ");
-        date = array[0] + "/"+ array[1];
+        // date = array[0] + "/"+ array[1];
         var part1 = result["part1"];
         var part2 = result["part2"];
         var part3 = result["part3"];

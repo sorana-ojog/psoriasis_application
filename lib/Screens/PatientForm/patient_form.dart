@@ -30,7 +30,7 @@ var p3_rheumatologist;
 var p3_ultraviolet;
 var p3_number_of_tablets;
 var p3_which_tablets;
-var date_time;
+// var date_time;
 var scalp1;
 var face2;
 var arms3;
@@ -80,7 +80,7 @@ class _AppState extends State<PatientForm> {
         p3_ultraviolet = result["p3_ultraviolet"];
         p3_number_of_tablets = result["p3_number_of_tablets"];
         p3_which_tablets = result["p3_which_tablets"];
-        date_time = result["date_time"];
+        // date_time = result["date_time"];
         scalp1 = result["scalp1"];
         face2 = result["face2"];
         arms3 = result["arms3"];
@@ -106,6 +106,10 @@ class _AppState extends State<PatientForm> {
   @override
   Widget build(BuildContext context) {
     final Future<List<String>> patient_data = data();
+    var mydate = widget.date;
+    var splitDate = mydate.split(" ");
+    var splitDate2 = splitDate[0].split("/");
+    mydate = splitDate2[2]+ "/" + splitDate2[1] +"/"+ splitDate2[0];
     // final String mine = patient_data as String;
     print("yes here");
     print (patient_data);
@@ -137,7 +141,7 @@ class _AppState extends State<PatientForm> {
                     TextSpan(text: "This is the form ", style: TextStyle( color: Colors.black)),
                     TextSpan(text: "$title $patient_name", style: TextStyle(fontWeight: FontWeight.bold, color: kPrimaryColor)),
                     TextSpan(text: " completed on ", style: TextStyle( color: Colors.black)),
-                    TextSpan(text: "$date_time", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                    TextSpan(text: "$mydate", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
                     TextSpan(text: ".", style: TextStyle( color: Colors.black)),
                   ],
                 )
