@@ -126,7 +126,7 @@ class _AppState extends State<Results> {
                 width: size.width * 0.65,
                 constraints: BoxConstraints(maxWidth: 1000),
                 child: Text(
-                  'Part 3:  '+ _part3.toString() + ' points',
+                  'Part 3:  '+ _part3.toString() + '.0 points',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                   fontSize: 22,
@@ -152,40 +152,8 @@ class _AppState extends State<Results> {
                         onPressed: () async{
                            
                           final prefs = await SharedPreferences.getInstance();
-                          final a = await prefs.remove('scalp1');
-                          final b= await prefs.remove('face2');
-//                           final User? user = auth.currentUser;
-//                           final uid = user!.uid;
-//                           print (uid);
-//                           CollectionReference ref = FirebaseFirestore.instance.collection('form');
-//   //                         ref.get().then((querySnapshot) {
-//   //   querySnapshot.docs.forEach((result) {
-//   //     print(result.data());
-//   //   });
-//   // });
-// ref
-//     .where("user_ID", isEqualTo: uid)
-//     .get()
-//     .then((value) {
-//   value.docs.forEach((result) {
-//     var rez = result["date_time"];
-//     // var date = rez!["date_time"];
-//       print(rez);
-//   });
-// });
-
-
-
-    // Stream<QuerySnapshot<Object?>> eventsQuery = await ref
-    //     .where("user_ID", isEqualTo: uid)
-    //     .snapshots();
-    // print(ref);
-    // var document = await FirebaseFirestore.instance.collection('form');
-    // print("here");
-    // print(document);
-  // document.get() => then(function(document) {
-  //   print(document("name"));
-  //   });
+                          await prefs.remove('scalp1');
+                          await prefs.remove('face2');
                           await prefs.remove('arms3');
                           await prefs.remove('hands4');
                           await prefs.remove('chest5');

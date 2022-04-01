@@ -3,6 +3,7 @@ import 'package:psoriasis_application/Screens/CompletedForms/completed_forms.dar
 import 'package:psoriasis_application/Screens/Graphs/graphs.dart';
 import 'package:psoriasis_application/Screens/Home/components/body.dart';
 import 'package:psoriasis_application/components/bottom_nav2.dart';
+import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,50 +58,15 @@ class _AppState extends State<PastEntries> {
                   ),
                 ),
               ),
-              SizedBox(height: size.height * 0.2),
+              SizedBox(height: size.height * 0.1),
               RoundedButton(
               text: "Graphs", 
               press: () async{
-                final User? user = await auth.currentUser;
-              final uid = user!.uid;
-              List<String> formDates = [];
-              List<double> part1Results = [];
-              List<double> part2Results = [];
-              List<double> part3Results = [];
-              print (uid);
-              CollectionReference ref = await FirebaseFirestore.instance.collection('form');
-              await ref
-                  .orderBy("date_time", descending: false)
-                  // .limit(7)
-                  .where("user_ID", isEqualTo: uid)
-                  .get()
-                  .then((value) {
-                value.docs.forEach((result) {
-                  var date = result["date_time"];
-                  var array = date.split("/");
-                  date = array[0] + "/"+ array[1];
-                  var part1 = result["part1"];
-                  var part2 = result["part2"];
-                  var part3 = result["part3"];
-                  formDates.add(date);
-                  double part1s= part1+ 0.0;
-                  part1Results.add(part1s);
-                  part2Results.add(part2+ 0.0);
-                  part3Results.add(part3 +0.0);
-                  print(date);
-                  print(formDates);
-                  print(part1Results);
-                  print(part2Results);
-                  print(part3Results);
-                });
-              });
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
                     builder: (context){
-                      print("here");
-                      print(formDates);
-                      return Graphs(dates: formDates, part1: part1Results, part2: part2Results, part3: part3Results);
+                      return NavBar(whichPage: 0, mini: 2, whichPage2: 2,);
                     },
                   ),
                 );
@@ -110,30 +76,11 @@ class _AppState extends State<PastEntries> {
               text: "See Completed Forms",
               color: kPrimaryLightColor, 
               press: () async{
-              final User? user = await auth.currentUser;
-              final uid = user!.uid;
-              List<String> formDates = [];
-              print (uid);
-              CollectionReference ref = await FirebaseFirestore.instance.collection('form');
-              await ref
-                  .orderBy("date_time", descending: true)
-                  .where("user_ID", isEqualTo: uid)
-                  .get()
-                  .then((value) {
-                value.docs.forEach((result) {
-                  var rez = result["date_time"];
-                  formDates.add(rez);
-                  print(rez);
-                  print(formDates);
-                });
-              });
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
                     builder: (context){
-                      print("here");
-                      print(formDates);
-                      return CompletedForms(formsDate: formDates, uid: uid);
+                      return NavBar(whichPage: 0, mini: 2, whichPage2: 1,);
                     },
                   ),
                 );

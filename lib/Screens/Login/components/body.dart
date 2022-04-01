@@ -28,10 +28,15 @@ void main() async {
 }
 String email = ""; 
 String password = "";
-class Body extends StatelessWidget {
-  const Body({
-    Key? key,
-  }) : super(key: key);
+class Body extends StatefulWidget {
+  const Body({Key? key}) : super(key: key);
+
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  bool visible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +60,28 @@ class Body extends StatelessWidget {
             hintText: "Your Email",
             onChanged: (value) => email = value,
           ),
-          RoundedPasswordField(
-            hintText: "Password",
-            onChanged: (value) => password = value,
-          ),
+          TextFieldContainer(
+              child: TextField(
+                obscureText: !visible,
+                onChanged: (value) => password = value,
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  icon: Icon(
+                    Icons.lock,
+                    color: kPrimaryColor,
+                  ),
+                  suffixIcon: IconButton(
+                      icon: visible ? Icon(Icons.visibility, color:  kPrimaryColor ):
+                                       Icon(Icons.visibility_off,color:  Colors.grey),
+                      onPressed: () {
+                        setState(() {
+                          visible = !visible;
+                        });
+                      }),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
           RoundedButton(
             text: "SIGN IN", 
             press: ()async {
@@ -123,7 +146,29 @@ class Body extends StatelessWidget {
                     // FirebaseFirestore f =FirebaseFirestore.instance;
                     // CollectionReference c = f.collection('users');
                     // c.add({email : password});
-                    return regex.hasMatch(badge) ? NavBarDoctor(whichPage: 0, mini: 0) : NavBar(whichPage: 0, mini: 0);
+                    if ( !user.emailVerified) {
+                      return Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(50),
+                        constraints: BoxConstraints(maxWidth: 800),
+                        child: Text(
+                          'Welcome to Psoriasis Control. Before using this service, you must verify your email. Go to your inbox and click on the link there. Afterwards, come here again and refresh the page.', 
+                          style: TextStyle(
+                          fontSize: 18,
+                          color: kPrimaryColor
+                          ),
+                        ),
+                      );
+                      }else{
+                        if(regex.hasMatch(badge) ){
+                          print("i am doctor");
+                          return NavBarDoctor(whichPage:0, mini: 0);
+                        }else{
+                          print("i am not a doctor");
+                          return NavBar(whichPage:0, mini: 0);
+                        }
+                      }
+                    // return regex.hasMatch(badge) ? NavBarDoctor(whichPage: 0, mini: 0) : NavBar(whichPage: 0, mini: 0);
                   },
                 ),
               );

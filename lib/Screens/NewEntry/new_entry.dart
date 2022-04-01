@@ -31,7 +31,7 @@ class _AppState extends State<NewEntry> {
       appBar: AppBar(
         // actions: <Widget>[
         // ],
-        title: Text('Simplified Psoriasis Index - New Entry'),
+        title: Text('New Entry'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
@@ -46,6 +46,14 @@ class _AppState extends State<NewEntry> {
             // mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: size.height * 0.03),
+              Text(
+                'Simplified Psoriasis Index',
+                style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                  ),
+              ),
               SizedBox(height: size.height * 0.03),
               DescriptionText(
                 titleText: 'Description', 

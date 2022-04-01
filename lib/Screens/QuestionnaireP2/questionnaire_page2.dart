@@ -77,6 +77,7 @@ class _AppState extends State< QuestionnaireP2> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              SizedBox(height: size.height * 0.03),
               Text(
                 'PART 1B',
                 style: TextStyle(

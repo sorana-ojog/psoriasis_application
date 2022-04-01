@@ -138,6 +138,34 @@ class _BodyState extends State<Body> {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   return;
                 }
+              final regex = RegExp(r'[0-9]{9}');
+              //checks if the code used in login is a 9 digits one
+              var doctor_code= "";
+              if(regex.hasMatch(code)){
+                var r = Random();
+                const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+                doctor_code = List.generate(10, (index) => _chars[r.nextInt(_chars.length)]).join();
+              }else{
+                var count = 0;
+                CollectionReference ref2 = await FirebaseFirestore.instance.collection('doctors');
+                await ref2
+                    .where("doctor_code", isEqualTo: code)
+                    .get()
+                    .then((value) {
+                  value.docs.forEach((result) {
+                    count += 1;
+                  });
+                });
+                if(count == 0){
+                  const snackBar = SnackBar(
+                  content: Text('There is no GP with this code.'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  return;
+                }
+              }
+              // User? user = await FirebaseAuth.instance.currentUser;
+              
               try {
                       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
                         email: email,
@@ -173,20 +201,16 @@ class _BodyState extends State<Body> {
                       print(e);
                     }
               
-              final regex = RegExp(r'[0-9]{9}');
-              //checks if the code used in login is a 9 digits one
-              var doctor_code= "";
-              if(regex.hasMatch(code)){
-                var r = Random();
-                const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
-                doctor_code = List.generate(10, (index) => _chars[r.nextInt(_chars.length)]).join();
-              }
+              
               const snackBar = SnackBar(
                 content: Text('Successfully registered!'),
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               final User? user = await auth.currentUser;
               final uid = user!.uid;
+              if (user!= null && !user.emailVerified) {
+                await user.sendEmailVerification();
+              }
               Navigator.push(
                 context, 
                 MaterialPageRoute(
@@ -209,8 +233,29 @@ class _BodyState extends State<Body> {
                       "user_ID": uid
                       });
                     }
-                    
-                    return doctor_code=="" ? NavBar(whichPage: 0, mini: 0) : NavBarDoctor(whichPage: 0, mini: 0);
+                    if ( !user.emailVerified) {
+                      return Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(50),
+                        constraints: BoxConstraints(maxWidth: 800),
+                        child: Text(
+                          'Welcome to Psoriasis Control. Before using this service, you must verify your email. Go to your inbox and click on the link there. Afterwards, come here again and refresh the page.', 
+                          style: TextStyle(
+                          fontSize: 18,
+                          color: kPrimaryColor
+                          ),
+                        ),
+                      );
+                    }else{
+                      if(doctor_code != ""){
+                        print("i am doctor");
+                        return NavBarDoctor(whichPage:0, mini: 0);
+                      }else{
+                        print("i am not a doctor");
+                        return NavBar(whichPage:0, mini: 0);
+                      }
+                    }
+                    // return doctor_code=="" ? NavBar(whichPage: 0, mini: 0) : NavBarDoctor(whichPage: 0, mini: 0);
                   },
                 ),
               );

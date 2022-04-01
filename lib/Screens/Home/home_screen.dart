@@ -118,7 +118,7 @@ class _AppState extends State< HomeScreen> {
                 constraints: BoxConstraints(maxWidth: 900),
                 child: 
                   Text(
-                    "You are registered with $title ${snapshot.data![1]}.",
+                    "You are registered with ${snapshot.data![1]}",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
                   ),
               ),

@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
+import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:psoriasis_application/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,6 +46,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  
   User? user;
   bool isDoctor;
   MyApp({Key? key, required this.user, required this.isDoctor}) : super(key: key);
@@ -62,13 +64,56 @@ class MyApp extends StatefulWidget {
   void dispose() {
     super.dispose();
   }
-
+  void logout() async {
+    await FirebaseAuth.instance.signOut();
+    // Navigator.pushNamed(context, Welcome);
+  }
 
   Widget getHomePage(User? user, bool isDoctor) {
     print(user);
     if(user == null){
       print("i am not in");
       return WelcomeScreen();
+    // }else if ( !user.emailVerified) {
+    //   return Container(
+    //     alignment: Alignment.center,
+    //     padding: EdgeInsets.all(50),
+    //     constraints: BoxConstraints(maxWidth: 800),
+    //     child: Column(
+    //       children: <Widget>[
+    //         Text(
+    //           'Welcome to Psoriasis Control!',
+    //           style: TextStyle(
+    //             fontSize: 20,
+    //             color: kPrimaryColor
+    //           ),
+    //         ),
+    //         SizedBox(height: 10),
+    //         Text(
+    //           'Before using this service, you must verify your email. Go to your inbox and click on the link there. Afterwards, come here again and refresh the page.', 
+    //           style: TextStyle(
+    //             fontSize: 16,
+    //             color: kPrimaryColor
+    //           ),
+    //         ),
+    //         SizedBox(height: 20),
+    //         RoundedButton(
+    //           text: "Log Out", 
+    //           press: () async{
+    //             logout();
+    //             Navigator.push(
+    //               context,
+    //               MaterialPageRoute(
+    //                 builder: (context) {
+    //                 return WelcomeScreen();
+    //                 },
+    //               ),
+    //             );
+    //           },
+    //         ),
+    //       ]
+    //     ),
+    //   );
     }else{
       if(isDoctor){
         print("i am doctor");
@@ -90,16 +135,6 @@ class MyApp extends StatefulWidget {
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),
-      // initialRoute: this.widget.user == null ? 'Welcome' : 'Home',
-      
-      // ///key value pair
-      // routes: {
-      //   'Welcome': (context) => WelcomeScreen(),
-      //   /////////////////////////////////////////
-      //   // 'Welcome': (context) => NavBar(whichPage: 5, mini: 1),
-      //   'Home': (context) => NavBar(whichPage:0, mini: 0)
-      // },
-      // home: this.widget.user == null ? WelcomeScreen() : NavBar(whichPage:0, mini: 0),
       home: getHomePage(widget.user, widget.isDoctor)
     );
   }

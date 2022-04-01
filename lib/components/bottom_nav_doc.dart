@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/Screens/Home/home_screen.dart';
 import 'package:psoriasis_application/Screens/HomeDoc/home_doc.dart';
-import 'package:psoriasis_application/Screens/Login/login_screen.dart';
-import 'package:psoriasis_application/Screens/NewEntry/new_entry.dart';
 import 'package:psoriasis_application/Screens/PacientGraph/patient_graph.dart';
-import 'package:psoriasis_application/Screens/PastEntries/past_entries.dart';
 import 'package:psoriasis_application/Screens/PatientForm/patient_form.dart';
 import 'package:psoriasis_application/Screens/Profile/profile_screen.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/image_click.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP2/questionnaire_page2.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP3/questionnaire_page3.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP4/questionnaire_page4.dart';
+import 'package:psoriasis_application/Screens/ProfileGP/profile_gp.dart';
 import 'package:psoriasis_application/Screens/SeePatients/see_patients.dart';
-import 'package:psoriasis_application/Screens/Signup/signup_screen.dart';
 import 'package:psoriasis_application/Screens/SpecificPacient/specific_patient.dart';
 import 'package:psoriasis_application/constants.dart';
 
@@ -82,7 +71,7 @@ class _MyHomePageState extends State<NavBarDoctor> {
         children = <Widget>[
             HomeScreenDoc(),
             snapshot.data![whichPage],
-            Profile()
+            ProfileGP()
           ];
       }else if (snapshot.hasError) {
             children = <Widget>[

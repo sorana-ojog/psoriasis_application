@@ -1,71 +1,109 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/components/bottom_nav2.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
+import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:draw_graph/draw_graph.dart';
-import 'package:draw_graph/models/feature.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'dart:async';
-import 'dart:math' as math;
-
 
 class Graphs extends StatefulWidget {
-  final List<String> dates;
-  final List<double> part1;
-  final List<double> part2;
-  final List<double> part3;
-  const Graphs({
-    Key? key, 
-    required this.dates, 
-    required this.part1, 
-    required this.part2, 
-    required this.part3
-    }) : super(key: key);
-
+  const Graphs({Key? key}) : super(key: key);
   @override
   _AppState createState() => _AppState();
 }
-int _selectedIndex = 2;
+int _selectedIndex = 1;
+String patient_name = "";
+String title = "";
+List<String> rformsDates = [];
+List<double> rpart1Results = [];
+List<double> rpart2Results = [];
+List<double> rpart3Results = [];
+List<String> formsDates = [];
+List<double> part1Results = [];
+List<double> part2Results = [];
+List<double> part3Results = [];
+
 class _AppState extends State<Graphs> {
-  late List<Score> chartData;
-  late List<Score> chart2Data;
-  late List<Score> chart3Data;
+  int finish = 0;
+  late List<Score> chartData = [];
+  late List<Score> chart2Data =[];
+  late List<Score> chart3Data =[];
   late ChartSeriesController _chartSeriesController;
   late ChartSeriesController _chartSeriesController2;
   late ChartSeriesController _chartSeriesController3;
-
-  @override
-  void initState() {
+  var uid;
+    // void initState() {
+  //   chartData = getChartData();
+  //   chart2Data = getChart2Data();
+  //   chart3Data = getChart3Data();
+  //   super.initState();
+  // }
+  Future<List<String>> data() async{
+    final User? user = await auth.currentUser;
+    uid = user!.uid;
+    CollectionReference ref2 = await FirebaseFirestore.instance.collection('form');
+    await ref2
+        .orderBy("date_time", descending: true)
+        .limit(8)
+        .where("user_ID", isEqualTo: uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((result) {
+        var date = result["date_time"];
+        var array = date.split("/");
+        // var time = array[2].split(" ");
+        date = array[0] + "/"+ array[1];
+        var part1 = result["part1"];
+        var part2 = result["part2"];
+        var part3 = result["part3"];
+        rformsDates.add(date);
+        rpart1Results.add(part1 + 0.0);
+        rpart2Results.add(part2+ 0.0);
+        rpart3Results.add(part3 +0.0);
+        print(date);
+        print(rformsDates);
+        print(rpart1Results);
+        print(rpart2Results);
+        print(rpart3Results);
+      });
+    });
+    formsDates = rformsDates.reversed.toList();
+    part1Results = rpart1Results.reversed.toList();
+    part2Results = rpart2Results.reversed.toList();
+    part3Results = rpart3Results.reversed.toList();
     chartData = getChartData();
     chart2Data = getChart2Data();
     chart3Data = getChart3Data();
-    // Timer.periodic(const Duration(seconds: 1), updateDataSource);
-    super.initState();
+    finish = 1;
+    return formsDates;
   }
+  // @override
+  // void initState() {
+  //   chartData = getChartData();
+  //   chart2Data = getChart2Data();
+  //   chart3Data = getChart3Data();
+  //   // Timer.periodic(const Duration(seconds: 1), updateDataSource);
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final Future<List<String>> patient_data = data();
     Size size = MediaQuery.of(context).size;
-    double width = size.width;
-    double height = size.height;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
-        title: Text('Graphs'),
+        title: Text('Pacient Forms'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
-      // bottomNavigationBar: NavBar2(),
-      bottomNavigationBar: _showBottomNav(),
-      body:Container(
-        alignment: Alignment.center,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
+      body: FutureBuilder<List<String>>(
+        future: patient_data, // a previously-obtained Future<List<String>> or null
+        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+      List<Widget> children;
+          if (snapshot.hasData && snapshot.data != [] && finish != 0) {
+            children = <Widget>[
               SizedBox(height: size.height * 0.04),
               Container(
                 alignment: Alignment.center,
@@ -163,72 +201,63 @@ class _AppState extends State<Graphs> {
                 ),
               ),
               SizedBox(height: size.height * 0.03),
-            ],
+            ];
+          }else if (snapshot.hasError) {
+            children = <Widget>[
+              const Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ];
+          } else {
+            children = const <Widget>[
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Text('Loading Data...'),
+              )
+            ];
+          }
+       return Container(
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Column(
+            children: children
           ),
         ),
-      ),
+      );}),
     );
   }
 
+
+
   List<Score> getChartData() {
     return <Score>[
-      for(var i=0; i<widget.part1.length; i++)Score(widget.dates[i], widget.part1[i])
+      for(var i=0; i<part1Results.length; i++)Score(formsDates[i], part1Results[i])
     ];
   }
 
   List<Score> getChart2Data() {
     return <Score>[
-      for(var i=0; i<widget.part2.length; i++)Score(widget.dates[i], widget.part2[i])
+      for(var i=0; i<part2Results.length; i++)Score(formsDates[i], part2Results[i])
     ];
   }
 
   List<Score> getChart3Data() {
     return <Score>[
-      for(var i=0; i<widget.part3.length; i++)Score(widget.dates[i], widget.part3[i])
+      for(var i=0; i<part3Results.length; i++)Score(formsDates[i], part3Results[i])
     ];
   }
-   Widget _showBottomNav()
-  {
-    return BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.border_color),
-            label: 'New Entry',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'Past Entries',
-            backgroundColor: kPrimaryLightColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-            backgroundColor: kPrimaryLightColor,
-          ),
-        ],
-      backgroundColor: kPrimaryLightColor,
-      currentIndex: _selectedIndex,
-      selectedItemColor: kPrimaryColor,
-      unselectedItemColor: Colors.white,
-      onTap: _onTap,
-    );
-  }
-
-  void _onTap(int index)
-  {
-    _selectedIndex = index;
-    setState(() {
-
-    });
-  }
 }
-
 class Score {
   Score(this.time, this.value);
   final String time;
