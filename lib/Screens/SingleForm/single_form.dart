@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
-import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
+FirebaseAuth auth = FirebaseAuth.instance;
 class SingleForm extends StatefulWidget {
   final date;
   const SingleForm({Key? key, required this.date}) : super(key: key);
@@ -29,7 +25,6 @@ var p3_rheumatologist;
 var p3_ultraviolet;
 var p3_number_of_tablets;
 var p3_which_tablets;
-// var date_time;
 var scalp1;
 var face2;
 var arms3;
@@ -41,14 +36,11 @@ var thighs8;
 var legs9;
 var feets10;
 var which_tablets;
-// var fdate;
 class _AppState extends State<SingleForm> {
   int finish = 0;
   Future<List<String>> data() async{
     final User? user = await auth.currentUser;
     final uid = user!.uid;
-    // var splitDate = widget.date.split("/");
-    // fdate = splitDate[2]+ "/" + splitDate[1] +"/"+ splitDate[0];
     CollectionReference ref1 = await FirebaseFirestore.instance.collection('users');
     await ref1
         .where("user_ID", isEqualTo: uid)
@@ -78,7 +70,6 @@ class _AppState extends State<SingleForm> {
         p3_ultraviolet = result["p3_ultraviolet"];
         p3_number_of_tablets = result["p3_number_of_tablets"];
         p3_which_tablets = result["p3_which_tablets"];
-        // date_time = result["date_time"];
         scalp1 = result["scalp1"];
         face2 = result["face2"];
         arms3 = result["arms3"];
@@ -108,14 +99,9 @@ class _AppState extends State<SingleForm> {
     var splitDate = mydate.split(" ");
     var splitDate2 = splitDate[0].split("/");
     mydate = splitDate2[2]+ "/" + splitDate2[1] +"/"+ splitDate2[0];
-    // final String mine = patient_data as String;
-    print("yes here");
-    print (patient_data);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Pacient Forms'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,

@@ -64,10 +64,6 @@ class Polygon {
       double x = (l2.b * l1.c - l1.b * l2.c) / det;
       double y = (l1.a * l2.c - l2.a * l1.c) / det;
       // intersection point of line
-
-      // print("Point");
-      // print(x);
-      // print(y);
       return min(a1.x, b1.x) <= x + eps &&
           min(a2.x, b2.x) <= x + eps &&
           max(a2.x, b2.x) >= x - eps &&

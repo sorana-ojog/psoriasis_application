@@ -5,21 +5,12 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:psoriasis_application/Screens/Home/home_screen.dart';
-import 'package:psoriasis_application/Screens/PastEntries/past_entries.dart';
-import 'package:psoriasis_application/Screens/Profile/profile_screen.dart';
 import 'package:psoriasis_application/Screens/QuestionnaireP1/image_data.dart';
 import 'package:psoriasis_application/Screens/QuestionnaireP1/geometry_and_maths.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP2/questionnaire_page2.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP3/questionnaire_page3.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP4/questionnaire_page4.dart';
-import 'package:psoriasis_application/Screens/Signup/components/body.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/button_title.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class ImageClick extends StatefulWidget {
@@ -191,7 +182,7 @@ Widget _buildPopupDialog(
           zone: actualZone,
           marker: marker,
           image: image,
-        ), /////////////////////////
+        ), 
       ],
     ),
     actions: <Widget>[
@@ -265,8 +256,6 @@ class _IntensityRadioListState extends State<IntensityRadioList> {
                 );
               });
               await prefs.setDouble(zone, 0);
-              print(zone);
-              print(prefs.getDouble(zone));
             },
           ),
         ),
@@ -287,8 +276,6 @@ class _IntensityRadioListState extends State<IntensityRadioList> {
                 );
               });
               await prefs.setDouble(zone, 0.5);
-              print(zone);
-              print(prefs.getDouble(zone));
             },
           ),
         ),
@@ -306,11 +293,8 @@ class _IntensityRadioListState extends State<IntensityRadioList> {
                     x: widget.marker.x,
                     y: widget.marker.y,
                     child: Marker.childFromText("+"));
-                print(zoneMarker);
               });
               await prefs.setDouble(zone, 1);
-              print(zone);
-              print(prefs.getDouble(zone));
             },
           ),
         ),
@@ -376,7 +360,6 @@ class _ImageClickState extends State<ImageClick> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: <Widget>[
-                  // for (int i in [1,2,3,4,5])
                   ButtonTitle(
                     page: NavBar(whichPage: 1, mini: 1),
                     text: 'Part 1A (front)',
@@ -431,7 +414,6 @@ class _ImageClickState extends State<ImageClick> {
                       'For each of your body areas that are affected by psoriasis, please press on them on the interactive photo below and select how much that area is affected today*. There will be two separate photos (front and back) and you will see both of them as you progress through the questionnaire.',
                       style: TextStyle(
                         fontSize: 17,
-                        // fontWeight: FontWeight.itali,
                       ),
                     ),
                   ),
@@ -443,7 +425,6 @@ class _ImageClickState extends State<ImageClick> {
                       '  * even if the skin of the hands or feet is unaffected you can score ± for severe psoriasis of at least 2 and + for 6 or more fingers/toenails',
                       style: TextStyle(
                         fontSize: 14,
-                        // fontWeight: FontWeight.itali,
                       ),
                     ),
                   ),
@@ -483,7 +464,6 @@ class _ImageClickState extends State<ImageClick> {
                                               y: normalizedPoint.y),
                                           widget.whichImage))
                               .then((_) => setState(() {}));
-                          print(key);
                         }
                       }
                     }
@@ -496,12 +476,6 @@ class _ImageClickState extends State<ImageClick> {
                           x: normalizedPoint.x - woffset,
                           y: normalizedPoint.y));
                     });
-
-                    // print("[");
-                    // for (var p in points) {
-                    //   print("Point(${(p.x.toString())},${p.y.toString()}),");
-                    // }
-                    // print("]");
                   },
                   child: Container(
                       alignment: Alignment.center,
@@ -512,9 +486,6 @@ class _ImageClickState extends State<ImageClick> {
                               if (e == null) {
                                 return Text("");
                               }
-                              print(zoneMarker);
-                              print(e.x * realWidth);
-                              print(e.y * realHeight);
                               return Marker(
                                 x: e.x * realWidth,
                                 y: e.y * realHeight,
@@ -565,7 +536,6 @@ class _ImageClickState extends State<ImageClick> {
                         ),
                       ),
                     ),
-                    // SizedBox(width: size.width * 0.3),
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10),
                       width: size.width * 0.3,

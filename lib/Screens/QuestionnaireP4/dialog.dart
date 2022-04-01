@@ -1,22 +1,7 @@
-// import 'package:psoriasis_application/themes/constants.dart';
 // ignore_for_file: deprecated_member_use
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP2/questionnaire_page2.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP3/questionnaire_page3.dart';
-import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
-import 'package:psoriasis_application/components/button_title.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
-import 'package:psoriasis_application/components/svg_data1.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 
 class MyDialog extends StatefulWidget {
   MyDialog({

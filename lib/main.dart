@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:psoriasis_application/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,10 +20,8 @@ void main() async {
     if (user == null){
       return false;
     }
-    print("i am in isdoctor");
       final uid = user.uid;
       String badge ="";
-      print (uid);
       CollectionReference ref = await FirebaseFirestore.instance.collection('users');
       await ref
           .where("user_ID", isEqualTo: uid)
@@ -32,7 +29,6 @@ void main() async {
           .then((value) {
         value.docs.forEach((result) {
           badge = result["signup_code"];
-          print(badge);
         });
       });
       final regex = RegExp(r'[0-9]{9}');
@@ -66,13 +62,10 @@ class MyApp extends StatefulWidget {
   }
   void logout() async {
     await FirebaseAuth.instance.signOut();
-    // Navigator.pushNamed(context, Welcome);
   }
 
   Widget getHomePage(User? user, bool isDoctor) {
-    print(user);
     if(user == null){
-      print("i am not in");
       return WelcomeScreen();
     // }else if ( !user.emailVerified) {
     //   return Container(
@@ -116,10 +109,8 @@ class MyApp extends StatefulWidget {
     //   );
     }else{
       if(isDoctor){
-        print("i am doctor");
         return NavBarDoctor(whichPage:0, mini: 0);
       }else{
-        print("i am not a doctor");
         return NavBar(whichPage:0, mini: 0);
       }
     }
@@ -127,7 +118,6 @@ class MyApp extends StatefulWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(this.widget.user);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Psoriasis Control',

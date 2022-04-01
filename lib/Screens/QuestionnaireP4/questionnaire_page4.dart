@@ -7,15 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP2/questionnaire_page2.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP3/questionnaire_page3.dart';
-import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
 import 'package:psoriasis_application/components/button_title.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
-import 'package:psoriasis_application/components/svg_data1.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,30 +36,7 @@ class _AppState extends State< QuestionnaireP4> {
     bool checkboxValueCity = false;
     List<String> allTablets = ['Acitretin', 'Ciclosporin', 'Efalizumab', 'Methotrexate', 'Infliximab', 'Dimethylfumarate', 'Etanercept', 'Apremilast', 'Secukinumab', 'Ustekinumab', 'Other'];
     List<String> selectedTablets = [];
-    DateTime currentPhoneDate = DateTime.now(); //DateTime
-
-//     @override
-//     initState() {
-//       super.initState();
-//       loadSwitchValue();
-//     }
-
-
-//     checkValue() async{
-//       SharedPreferences prefs = await SharedPreferences.getInstance();
-//       setState(() {
-//         prefs.setBool('astricin', _valueA!);
-//       });
-// print('no');
-//     }
-
-//     loadSwitchValue()async{
-//       SharedPreferences prefs = await SharedPreferences.getInstance();
-//       setState(() {
-//         _valueA = (prefs.getBool('astricin')) ?? false;
-//       });
-//       print('yes');
-//     }
+    DateTime currentPhoneDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -82,7 +51,6 @@ class _AppState extends State< QuestionnaireP4> {
             scrollDirection: Axis.horizontal,
               child: Row(
                 children: <Widget>[
-                // for (int i in [1,2,3,4,5])
                   ButtonTitle(
                   page: NavBar(whichPage: 1, mini: 1),
                   text: 'Part 1A (front)',
@@ -352,7 +320,6 @@ class _AppState extends State< QuestionnaireP4> {
                                   selectedTablets: selectedTablets,
                                   onSelectedTabletsListChanged: (tablets) {
                                     selectedTablets = tablets;
-                                    print(selectedTablets);
                                   }
                                 );
                               }
@@ -420,8 +387,6 @@ class _AppState extends State< QuestionnaireP4> {
                           DateTime myDateTime = myTimeStamp.toDate();
                           final DateFormat formatter = DateFormat('yyyy/MM/dd HH:mm');
                           final String formatted = formatter.format(myDateTime);
-                          print("current phone data is: $currentPhoneDate");
-                          print("current phone data is: $formatted");
                           final prefs = await SharedPreferences.getInstance();
                           final int? part1b = await prefs.getInt('psoriasis_today');
                           final double? _part2 = await prefs.getDouble('affected_today'); 
@@ -446,24 +411,18 @@ class _AppState extends State< QuestionnaireP4> {
                               zoneIntensity[z] = thisZone;
                               _part1AScore = _part1AScore + zoneIntensity[z]!;          
                             }
-                            print(zoneIntensity[z]);
                           }
                           double part1 = 0;
                           if(part1b != null){
                             part1 = _part1AScore * part1b;
                           }
-
-                          
-                          // final int? part1 = 0;
                           final int? part2 = _part2?.toInt();
-                          // ///////// 
                           int part3Res = 0;
                           for (var name in [_value1, _value2, _value3, _value4, _value5]) {
                             if(name == true){
                               part3Res += 1;
                             }
                           }
-                          ////////null error
                           if(int.parse(tablets_no) <= 5){
                             part3Res += int.parse(tablets_no);
                           }else{
@@ -502,7 +461,6 @@ class _AppState extends State< QuestionnaireP4> {
                                   'legs9': zoneIntensity['legs9'],
                                   'feets10': zoneIntensity['feets10'],
                                 });
-                                //remove stuff
                                 return Results();
                               },
                             ),

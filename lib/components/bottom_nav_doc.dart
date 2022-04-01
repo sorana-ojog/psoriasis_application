@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/HomeDoc/home_doc.dart';
 import 'package:psoriasis_application/Screens/PacientGraph/patient_graph.dart';
 import 'package:psoriasis_application/Screens/PatientForm/patient_form.dart';
-import 'package:psoriasis_application/Screens/Profile/profile_screen.dart';
 import 'package:psoriasis_application/Screens/ProfileGP/profile_gp.dart';
 import 'package:psoriasis_application/Screens/SeePatients/see_patients.dart';
 import 'package:psoriasis_application/Screens/SpecificPacient/specific_patient.dart';

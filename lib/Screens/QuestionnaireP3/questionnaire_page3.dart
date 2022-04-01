@@ -1,15 +1,5 @@
-// import 'package:psoriasis_application/themes/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP2/questionnaire_page2.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP4/questionnaire_page4.dart';
-import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
 import 'package:psoriasis_application/components/button_title.dart';
-import 'package:psoriasis_application/components/svg_data1.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,9 +17,6 @@ class _AppState extends State< QuestionnaireP3> {
     Size size = MediaQuery.of(context).size;
     double width = size.width;
     double height = size.height;
-    // final Future<int?> counter = preference();
-    // print('alsoooo');
-    // print(_counter);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -39,7 +26,6 @@ class _AppState extends State< QuestionnaireP3> {
             scrollDirection: Axis.horizontal,
               child: Row(
                 children: <Widget>[
-                  // for (int i in [1,2,3,4,5])
                   ButtonTitle(
                   page: NavBar(whichPage: 1, mini: 1),
                   text: 'Part 1A (front)',
@@ -71,7 +57,6 @@ class _AppState extends State< QuestionnaireP3> {
         ),
         backgroundColor: kPrimaryColor,
       ),
-      // bottomNavigationBar: NavBar(), ///////maybe copy paste bar
       body: Container(
         alignment: Alignment.center,
         child: SingleChildScrollView(
@@ -199,7 +184,6 @@ class _AppState extends State< QuestionnaireP3> {
                       ),
                     ),
                   ),
-                  // SizedBox(width: size.width * 0.3),
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 10),
                     width: size.width * 0.3,
@@ -215,8 +199,6 @@ class _AppState extends State< QuestionnaireP3> {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.setDouble('affected_today', _currentSliderValue);
                         final double? counter = prefs.getDouble('affected_today');
-                        print("this double");
-                        print(counter);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

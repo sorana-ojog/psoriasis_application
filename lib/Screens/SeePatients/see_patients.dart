@@ -1,16 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/Screens/SpecificPacient/specific_patient.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
-import 'package:psoriasis_application/components/rounded_input_field.dart';
 import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/components/text_field_container.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+FirebaseAuth auth = FirebaseAuth.instance;
 class  SeePatients extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
@@ -29,7 +25,6 @@ class _AppState extends State< SeePatients> {
     String birth_date = "";
     String patient_ID = "";
     int no_patients = 0;
-    print (uid);
     CollectionReference ref1 = await FirebaseFirestore.instance.collection('doctors');
     await ref1
         .where("user_ID", isEqualTo: uid)
@@ -48,7 +43,6 @@ class _AppState extends State< SeePatients> {
       value.docs.forEach((result) {
         name = result["last_name"];
         name = name + ", " + result["first_name"];
-        print(name);
         patients.add(name);
         birth_date = result["date_of_birth"];
         birth_dates.add(birth_date);
@@ -65,14 +59,9 @@ class _AppState extends State< SeePatients> {
   Widget build(BuildContext context) {
     String input = "";
     final Future<List<String>> patient_data = data();
-    // final String mine = patient_data as String;
-    print("yes here");
-    print (patient_data);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Your Patients'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,

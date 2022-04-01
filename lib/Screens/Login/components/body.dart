@@ -1,21 +1,16 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/Home/home_screen.dart';
 import 'package:psoriasis_application/Screens/Login/components/background.dart';
-import 'package:psoriasis_application/Screens/Login/login_screen.dart';
 import 'package:psoriasis_application/Screens/Signup/signup_screen.dart';
 import 'package:psoriasis_application/components/already_have_an_account.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/components/rounded_input_field.dart';
-import 'package:psoriasis_application/components/rounded_password_field.dart';
 import 'package:psoriasis_application/components/text_field_container.dart';
 import 'package:psoriasis_application/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:psoriasis_application/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -143,9 +138,6 @@ class _BodyState extends State<Body> {
                 context, 
                 MaterialPageRoute(
                   builder: (context){
-                    // FirebaseFirestore f =FirebaseFirestore.instance;
-                    // CollectionReference c = f.collection('users');
-                    // c.add({email : password});
                     if ( !user.emailVerified) {
                       return Container(
                         alignment: Alignment.center,
@@ -168,7 +160,6 @@ class _BodyState extends State<Body> {
                           return NavBar(whichPage:0, mini: 0);
                         }
                       }
-                    // return regex.hasMatch(badge) ? NavBarDoctor(whichPage: 0, mini: 0) : NavBar(whichPage: 0, mini: 0);
                   },
                 ),
               );

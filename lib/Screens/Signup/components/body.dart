@@ -164,8 +164,6 @@ class _BodyState extends State<Body> {
                   return;
                 }
               }
-              // User? user = await FirebaseAuth.instance.currentUser;
-              
               try {
                       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
                         email: email,
@@ -255,7 +253,6 @@ class _BodyState extends State<Body> {
                         return NavBar(whichPage:0, mini: 0);
                       }
                     }
-                    // return doctor_code=="" ? NavBar(whichPage: 0, mini: 0) : NavBarDoctor(whichPage: 0, mini: 0);
                   },
                 ),
               );

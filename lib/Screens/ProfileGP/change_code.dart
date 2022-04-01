@@ -1,4 +1,3 @@
-// import 'package:psoriasis_application/themes/constants.dart';
 // ignore_for_file: deprecated_member_use
 
 import 'dart:math';
@@ -6,35 +5,11 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP2/questionnaire_page2.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP3/questionnaire_page3.dart';
-import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
-import 'package:psoriasis_application/components/button_title.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
-import 'package:psoriasis_application/components/rounded_input_field.dart';
-import 'package:psoriasis_application/components/rounded_password_field.dart';
-import 'package:psoriasis_application/components/svg_data1.dart';
 import 'package:psoriasis_application/components/text_field_container.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ChangeCodeDialog extends StatefulWidget {
-  // ChangeCodeDialog({
-  //   required this.tablets,
-  //   required this.selectedTablets,
-  //   required this.onSelectedTabletsListChanged,
-  //   other
-  // });
-
-  // final List<String> tablets;
-  // final List<String> selectedTablets;
-  // final ValueChanged<List<String>> onSelectedTabletsListChanged;
-  // String other ='';
   @override
   _ChangeGPDialogState createState() => _ChangeGPDialogState();
 }
@@ -43,12 +18,6 @@ class _ChangeGPDialogState extends State<ChangeCodeDialog> {
   String password = "";
   String doctor_code = "";
   bool visible = false;
-  // @override
-  // void initState() {
-  //   _tempSelectedTablets = widget.selectedTablets;
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -98,17 +67,6 @@ class _ChangeGPDialogState extends State<ChangeCodeDialog> {
                     Text("To change your code, type in your password and press DONE. A new code will be automatically generated for you"),
                     SizedBox(height: size.height * 0.01),
                     Text("WARNING! If you change your code, you will lose all patients that have registered with your code previously.")
-                  //   Container(
-                  //     alignment: Alignment.center,
-                  // margin: EdgeInsets.symmetric(vertical: 10),
-                  // constraints: BoxConstraints(maxWidth: 500),
-                  //     child: 
-                  //         RoundedInputField(
-                  //           hintText: "New Code From GP", 
-                  //           onChanged: (value) => doctor_code = value,
-                  //           icon: Icons.title,
-                  //         )),
-                          
                       ])
                     );
                   }

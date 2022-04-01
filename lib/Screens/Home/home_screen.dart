@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:psoriasis_application/Screens/Signup/components/body.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class  HomeScreen extends StatefulWidget {
   @override
@@ -18,7 +17,6 @@ class _AppState extends State< HomeScreen> {
     String rez = "";
     String signup_code = "";
     int no_forms = 0;
-    print (uid);
     CollectionReference ref = await FirebaseFirestore.instance.collection('users');
     await ref
         .where("user_ID", isEqualTo: uid)
@@ -68,14 +66,9 @@ class _AppState extends State< HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Future<List<String>> doctor_data = data();
-    // final String mine = doctor_data as String;
-    print("yes here");
-    print (doctor_data);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Home'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,

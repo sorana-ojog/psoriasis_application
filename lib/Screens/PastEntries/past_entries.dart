@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/CompletedForms/completed_forms.dart';
-import 'package:psoriasis_application/Screens/Graphs/graphs.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/components/bottom_nav2.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class  PastEntries extends StatefulWidget {
   @override
@@ -22,17 +15,13 @@ class _AppState extends State<PastEntries> {
     Size size = MediaQuery.of(context).size;
     double width = size.width;
     double height = size.height;
-    // final Future<void> counter = preference();
 
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Past Entries'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
-      // bottomNavigationBar: NavBar2(),
       body: Container(
         alignment: Alignment.center,
         child: SingleChildScrollView(

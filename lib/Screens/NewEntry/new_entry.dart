@@ -1,11 +1,6 @@
-// import 'package:psoriasis_application/themes/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/questionnaire_page1.dart';
-import 'package:psoriasis_application/Screens/QuestionnaireP1/wop.dart';
-import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
 import 'package:psoriasis_application/components/description_text.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
@@ -26,26 +21,18 @@ class _AppState extends State<NewEntry> {
   Widget build(BuildContext context) {
     
     Size size = MediaQuery.of(context).size;
-    // bool? checkedValue;
-    // bool? _value = false;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('New Entry'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,
       ),
       body: Container(
-        // width: size.width * 0.8,
         width:double.infinity,
         height: size.height,
-        // constraints: BoxConstraints(maxWidth: 1000),
         alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: size.height * 0.03),
               Text(
@@ -108,7 +95,6 @@ class _AppState extends State<NewEntry> {
                     autofocus: false,
                     activeColor: kPrimaryColor,
                     checkColor: Colors.white,
-                    // selected: this._value,
                     value: _value,
                     onChanged: (bool? value) {
                       setState(() {
@@ -123,13 +109,8 @@ class _AppState extends State<NewEntry> {
                 press: ()async{
                   final User? user = await auth.currentUser;
                   final uid = user!.uid;
-                  // Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
-                  // DateTime myDateTime = myTimeStamp.toDate();
-                  // final DateFormat formatter = DateFormat('dd/MM/yyyy');
-                  // final String formatted = formatter.format(myDateTime);
                   List<String> datas = [];
                   var date;
-                  print (uid);
                   int no_forms = 0;
                   CollectionReference ref3 = await FirebaseFirestore.instance.collection('form');
                   await ref3
@@ -143,45 +124,17 @@ class _AppState extends State<NewEntry> {
                       no_forms += 1;
                     });
                   });
-                  print(no_forms);
                   if (no_forms == 0){
                     date = "none";
                   }else{
                     var date1 = date.split(" ");
                     date = date1[0];
                   }
-                  print(date);
-                  // CollectionReference ref2 = await FirebaseFirestore.instance.collection('form');
-                  // await ref2
-                  //     .orderBy("date_time", descending: true)
-                  //     .where("user_ID", isEqualTo: uid)
-                  //     .get()
-                  //     .then((value) {
-                  //   value.docs.forEach((result) {
-                  //     print("mama");
-                  //     var date = result["date_time"];
-                  //     var array;
-                  //     array = date.split(" ");
-                  //     date = array[0];
-                  //     print(date);
-                      
-                  //     // if(date != null){
-                        
-                  //     // }else{
-                  //     //   date = "none";
-                  //     // }
-                  //     datas.add(date);
-                  //     print(datas);
-                  //   });
-                  // });
-                    
-                  // }
                  
                   Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
                   DateTime myDateTime = myTimeStamp.toDate();
                   final DateFormat formatter = DateFormat('yyyy/MM/dd');
                   final String formatted = formatter.format(myDateTime);
-                  print(formatted);
                   if(_value == false){
                     const snackBar = SnackBar(
                     duration: const Duration(seconds: 5),

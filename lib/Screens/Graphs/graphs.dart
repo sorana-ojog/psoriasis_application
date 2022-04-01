@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
-import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+FirebaseAuth auth = FirebaseAuth.instance;
 class Graphs extends StatefulWidget {
   const Graphs({Key? key}) : super(key: key);
   @override
@@ -16,16 +13,17 @@ class Graphs extends StatefulWidget {
 int _selectedIndex = 1;
 String patient_name = "";
 String title = "";
-List<String> rformsDates = [];
-List<double> rpart1Results = [];
-List<double> rpart2Results = [];
-List<double> rpart3Results = [];
-List<String> formsDates = [];
-List<double> part1Results = [];
-List<double> part2Results = [];
-List<double> part3Results = [];
+
 
 class _AppState extends State<Graphs> {
+  List<String> rformsDates = [];
+  List<double> rpart1Results = [];
+  List<double> rpart2Results = [];
+  List<double> rpart3Results = [];
+  List<String> formsDates = [];
+  List<double> part1Results = [];
+  List<double> part2Results = [];
+  List<double> part3Results = [];
   int finish = 0;
   late List<Score> chartData = [];
   late List<Score> chart2Data =[];
@@ -34,12 +32,6 @@ class _AppState extends State<Graphs> {
   late ChartSeriesController _chartSeriesController2;
   late ChartSeriesController _chartSeriesController3;
   var uid;
-    // void initState() {
-  //   chartData = getChartData();
-  //   chart2Data = getChart2Data();
-  //   chart3Data = getChart3Data();
-  //   super.initState();
-  // }
   Future<List<String>> data() async{
     final User? user = await auth.currentUser;
     uid = user!.uid;
@@ -55,10 +47,6 @@ class _AppState extends State<Graphs> {
         var splitDate = date1.split(" ");
         var splitDate2 = splitDate[0].split("/");
         var date = splitDate2[2]+ "/" + splitDate2[1];
-        // var date = result["date_time"];
-        // var array = date.split("/");
-        // var time = array[2].split(" ");
-        // date = array[0] + "/"+ array[1];
         var part1 = result["part1"];
         var part2 = result["part2"];
         var part3 = result["part3"];
@@ -66,11 +54,6 @@ class _AppState extends State<Graphs> {
         rpart1Results.add(part1 + 0.0);
         rpart2Results.add(part2+ 0.0);
         rpart3Results.add(part3 +0.0);
-        print(date);
-        print(rformsDates);
-        print(rpart1Results);
-        print(rpart2Results);
-        print(rpart3Results);
       });
     });
     formsDates = rformsDates.reversed.toList();
@@ -83,15 +66,6 @@ class _AppState extends State<Graphs> {
     finish = 1;
     return formsDates;
   }
-  // @override
-  // void initState() {
-  //   chartData = getChartData();
-  //   chart2Data = getChart2Data();
-  //   chart3Data = getChart3Data();
-  //   // Timer.periodic(const Duration(seconds: 1), updateDataSource);
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final Future<List<String>> patient_data = data();

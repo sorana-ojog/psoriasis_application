@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/Screens/PacientGraph/patient_graph.dart';
-import 'package:psoriasis_application/Screens/PatientForm/patient_form.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+FirebaseAuth auth = FirebaseAuth.instance;
 class SpecificPacient extends StatefulWidget {
   final uid;
   const SpecificPacient({Key? key, required this.uid}) : super(key: key);
@@ -24,7 +21,6 @@ class _AppState extends State<SpecificPacient> {
   String date1 = "";
   List<String> dates = [];
   Future<List<String>> data() async{
-    print(widget.uid);
     List<String> formsDates = [];
     String date = "";
     CollectionReference ref1 = await FirebaseFirestore.instance.collection('users');
@@ -50,10 +46,7 @@ class _AppState extends State<SpecificPacient> {
         var splitDate = date1.split(" ");
         var splitDate2 = splitDate[0].split("/");
         date = splitDate2[2]+ "/" + splitDate2[1] +"/"+ splitDate2[0];
-        // var splitDate = date.split(" ");
-        // date = splitDate[0];
         formsDates.add(date);
-        print(date);
       });
     });
     finish = 1;
@@ -62,14 +55,9 @@ class _AppState extends State<SpecificPacient> {
   @override
   Widget build(BuildContext context) {
     final Future<List<String>> patient_data = data();
-    // final String mine = patient_data as String;
-    print("yes here");
-    print (patient_data);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Pacient Forms'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,

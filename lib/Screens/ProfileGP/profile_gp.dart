@@ -1,8 +1,5 @@
-// import 'package:psoriasis_application/themes/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Profile/change_GP.dart';
 import 'package:psoriasis_application/Screens/Profile/change_dialog.dart';
 import 'package:psoriasis_application/Screens/ProfileGP/change_code.dart';
 import 'package:psoriasis_application/Screens/Welcome/welcome_screen.dart';
@@ -18,7 +15,6 @@ class _AppState extends State<ProfileGP> {
 
   void logout() async {
     await FirebaseAuth.instance.signOut();
-    // Navigator.pushNamed(context, Welcome);
   }
 
   @override
@@ -30,11 +26,7 @@ class _AppState extends State<ProfileGP> {
             IconButton(
                 icon: Icon(Icons.logout),
                 onPressed: () {
-                  // _auth.signOut();
-                  // Navigator.pop(context);
                   logout();
-                  //   getMessages(); 
-                  //Implement logout functionality
                   Navigator.push(
                 context,
                 MaterialPageRoute(

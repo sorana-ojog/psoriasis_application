@@ -1,18 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Blank/blank.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/Screens/PacientGraph/patient_graph.dart';
-import 'package:psoriasis_application/Screens/PatientForm/patient_form.dart';
-import 'package:psoriasis_application/Screens/SingleForm/single_form.dart';
-import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/bottom_navigation_bar.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
 import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+FirebaseAuth auth = FirebaseAuth.instance;
 class CompletedForms extends StatefulWidget {
   const CompletedForms({Key? key}) : super(key: key);
   @override
@@ -42,7 +35,6 @@ class _AppState extends State<CompletedForms> {
         var splitDate2 = splitDate[0].split("/");
         date = splitDate2[2]+ "/" + splitDate2[1] +"/"+ splitDate2[0];
         formsDates.add(date);
-        print(date);
       });
     });
     finish = 1;
@@ -51,14 +43,9 @@ class _AppState extends State<CompletedForms> {
   @override
   Widget build(BuildContext context) {
     final Future<List<String>> my_data = data();
-    // final String mine = my_data as String;
-    print("yes here");
-    print (my_data);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Pacient Forms'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,
@@ -98,9 +85,7 @@ class _AppState extends State<CompletedForms> {
                             context, 
                             MaterialPageRoute(
                               builder: (context){
-
                                 return NavBar(whichPage: 0, mini: 2, whichPage2: 3, date: dates[index]);
-                                // NavBarDoctor(uid: uid, whichPage: 3, mini: 1, date: date);
                               },
                             ),
                           );

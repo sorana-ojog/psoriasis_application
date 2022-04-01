@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 class  HomeScreenDoc extends StatefulWidget {
@@ -18,7 +16,6 @@ class _AppState extends State< HomeScreenDoc> {
     List<String> datas = [];
     String rez = "";
     int no_patients = 0;
-    print (uid);
     CollectionReference ref = await FirebaseFirestore.instance.collection('users');
     await ref
         .where("user_ID", isEqualTo: uid)
@@ -56,14 +53,9 @@ class _AppState extends State< HomeScreenDoc> {
   @override
   Widget build(BuildContext context) {
     final Future<List<String>> doctor_data = data();
-    // final String mine = doctor_data as String;
-    print("yes here");
-    print (doctor_data);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Home'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,

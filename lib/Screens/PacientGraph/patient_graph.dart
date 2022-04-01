@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/Home/components/body.dart';
-import 'package:psoriasis_application/components/rounded_button.dart';
-import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+FirebaseAuth auth = FirebaseAuth.instance;
 class PacientGraph extends StatefulWidget {
   final uid;
   const PacientGraph({Key? key, required this.uid}) : super(key: key);
@@ -17,16 +14,16 @@ class PacientGraph extends StatefulWidget {
 int _selectedIndex = 1;
 String patient_name = "";
 String title = "";
-List<String> rformsDates = [];
-List<double> rpart1Results = [];
-List<double> rpart2Results = [];
-List<double> rpart3Results = [];
-List<String> formsDates = [];
-List<double> part1Results = [];
-List<double> part2Results = [];
-List<double> part3Results = [];
 
 class _AppState extends State<PacientGraph> {
+  List<String> rformsDates = [];
+  List<double> rpart1Results = [];
+  List<double> rpart2Results = [];
+  List<double> rpart3Results = [];
+  List<String> formsDates = [];
+  List<double> part1Results = [];
+  List<double> part2Results = [];
+  List<double> part3Results = [];
   int finish = 0;
   late List<Score> chartData = [];
   late List<Score> chart2Data =[];
@@ -34,15 +31,8 @@ class _AppState extends State<PacientGraph> {
   late ChartSeriesController _chartSeriesController;
   late ChartSeriesController _chartSeriesController2;
   late ChartSeriesController _chartSeriesController3;
-   @override
-  // void initState() {
-  //   chartData = getChartData();
-  //   chart2Data = getChart2Data();
-  //   chart3Data = getChart3Data();
-  //   super.initState();
-  // }
+
   Future<List<String>> data() async{
-    print(widget.uid);
     CollectionReference ref1 = await FirebaseFirestore.instance.collection('users');
     await ref1
         .where("user_ID", isEqualTo: widget.uid)
@@ -69,15 +59,12 @@ class _AppState extends State<PacientGraph> {
         var part1 = result["part1"];
         var part2 = result["part2"];
         var part3 = result["part3"];
+        print(date);
         rformsDates.add(date);
+        print(part1);
         rpart1Results.add(part1 + 0.0);
         rpart2Results.add(part2+ 0.0);
         rpart3Results.add(part3 +0.0);
-        print(date);
-        print(rformsDates);
-        print(rpart1Results);
-        print(rpart2Results);
-        print(rpart3Results);
       });
     });
     formsDates = rformsDates.reversed.toList();
@@ -94,14 +81,9 @@ class _AppState extends State<PacientGraph> {
   @override
   Widget build(BuildContext context) {
     final Future<List<String>> patient_data = data();
-    // final String mine = patient_data as String;
-    print("yes here");
-    print (patient_data);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        // actions: <Widget>[
-        // ],
         title: Text('Pacient Forms'),
         centerTitle: true,
         backgroundColor: kPrimaryColor,
