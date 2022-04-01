@@ -1,19 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:psoriasis_application/Screens/SeePatients/search_patients.dart';
+import 'package:psoriasis_application/Screens/Signup/components/body.dart';
 import 'package:psoriasis_application/components/bottom_nav_doc.dart';
 import 'package:psoriasis_application/components/square_button.dart';
 import 'package:psoriasis_application/components/text_field_container.dart';
 import 'package:psoriasis_application/constants.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
-class  SeePatients extends StatefulWidget {
+class  SearchPatients extends StatefulWidget {
+  final String last_name;
+
+  const SearchPatients({Key? key, required this.last_name}) : super(key: key);
   @override
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State< SeePatients> {
+class _AppState extends State< SearchPatients> {
   int count = 0;
   List<String> user_IDs = [];
   Future<List<String>> data() async{
@@ -26,6 +29,7 @@ class _AppState extends State< SeePatients> {
     String birth_date = "";
     String patient_ID = "";
     int no_patients = 0;
+    print(last_name);
     CollectionReference ref1 = await FirebaseFirestore.instance.collection('doctors');
     await ref1
         .where("user_ID", isEqualTo: uid)
@@ -38,10 +42,14 @@ class _AppState extends State< SeePatients> {
     CollectionReference ref2 = await FirebaseFirestore.instance.collection('users');
     await ref2
         // .orderBy("last_name", descending: false)
+        .where("last_name", isEqualTo: last_name)
         .where("signup_code", isEqualTo: doctor_id)
+        .where("last_name", isLessThan: last_name + 'z')
         .get()
         .then((value) {
       value.docs.forEach((result) {
+        print("object");
+        print(last_name);
         name = result["last_name"];
         name = name + ", " + result["first_name"];
         patients.add(name);
@@ -83,16 +91,7 @@ class _AppState extends State< SeePatients> {
                   suffixIcon: IconButton(
                       icon: Icon(Icons.search, color:  kPrimaryColor ),
                       onPressed: () async{
-                        print("hereeeeeeeeeeeeeee");
-                        print(input);
-                        Navigator.push(
-                  context, 
-                  MaterialPageRoute(
-                    builder: (context){
-                      return NavBarDoctor(input: input, whichPage: 4, mini: 1,);
-                    },
-                  ),
-                );
+                        
                       }),
                   border: InputBorder.none,
                 ),

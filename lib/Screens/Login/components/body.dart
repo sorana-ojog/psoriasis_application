@@ -138,7 +138,7 @@ class _BodyState extends State<Body> {
                 context, 
                 MaterialPageRoute(
                   builder: (context){
-                    if ( !user.emailVerified) {
+                    if ( user.emailVerified) {
                       return Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(50),

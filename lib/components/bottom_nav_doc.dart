@@ -3,6 +3,7 @@ import 'package:psoriasis_application/Screens/HomeDoc/home_doc.dart';
 import 'package:psoriasis_application/Screens/PacientGraph/patient_graph.dart';
 import 'package:psoriasis_application/Screens/PatientForm/patient_form.dart';
 import 'package:psoriasis_application/Screens/ProfileGP/profile_gp.dart';
+import 'package:psoriasis_application/Screens/SeePatients/search_patients.dart';
 import 'package:psoriasis_application/Screens/SeePatients/see_patients.dart';
 import 'package:psoriasis_application/Screens/SpecificPacient/specific_patient.dart';
 import 'package:psoriasis_application/constants.dart';
@@ -12,12 +13,14 @@ class NavBarDoctor extends StatefulWidget {
   final int mini;
   final String uid;
   final String date;
+  final String input;
   const NavBarDoctor({
     Key? key, 
     required this.whichPage, 
     required this.mini,
     this.uid = "",
-    this.date = ""
+    this.date = "",
+    this.input = ""
   }):super(key: key);
   @override
   _MyHomePageState createState()
@@ -47,7 +50,8 @@ class _MyHomePageState extends State<NavBarDoctor> {
       SeePatients(), //0
       SpecificPacient(uid: uid), //1
       PacientGraph(uid: uid), //2
-      PatientForm(uid: uid, date: date) //3
+      PatientForm(uid: uid, date: date), //3
+      SearchPatients(last_name: widget.input) //4
     ];
     finish = 1;
     return page_items;
