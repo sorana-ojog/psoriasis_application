@@ -4,6 +4,8 @@ This is the application that I created for my final year project at The Universi
 
 ## Getting Started
 
+You can check the final product out at https://psoriasis-app.web.app/#/ .
+
 If you want to see some accounts that already have data sent to the database, you could login using any of the following:
 
 ```
